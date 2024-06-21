@@ -1,0 +1,18 @@
+### Secrets Configuration
+
+You will need the following environment variables in your secrets.env file at the root of your project:
+
+```
+MYSQL_CONNECTION_HOST
+MYSQL_USER
+MYSQL_PASSWORD
+MYSQL_DATABASE
+MYSQL_PORT
+GOOGLE_AUTH_CLIENT_ID
+GOOGLE_AUTH_PROJECT_ID
+GOOGLE_AUTH_CLIENT_SECRET
+GOOGLE_SMTP_PASSWORD
+REDIS_HOST
+REDIS_PORT
+REDIS_SECRET
+```

@@ -1,0 +1,687 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Template Express.js server for personal projects"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+    />
+    <title>_____</title>
+    <style>
+      @media only screen and (min-width: 451px) {
+        body {
+          background: #ebececfb !important;
+        }
+        /* Nav */
+        .mynav {
+          background: -webkit-gradient(
+            linear,
+            left top,
+            right top,
+            from(#ffffff),
+            to(#3aaed8)
+          );
+          background: linear-gradient(to right, #ffffff, #3aaed8);
+          background-size: 100%;
+        }
+        .imi-logo {
+          -webkit-filter: brightness(0) invert(1);
+          filter: brightness(0) invert(1);
+        }
+        .ui.inverted.blue.menu .item:before {
+          background-color: rgba(255, 255, 255, 0.5);
+        }
+        .home-hero {
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          background-image: url("/public/default_background.jpeg");
+          background-size: cover;
+          background-position: center;
+        }
+        .home-text {
+          width: 100vw;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          margin: auto;
+          padding: 1rem;
+          top: 0;
+          left: 0;
+          font-size: 2rem;
+        }
+        #homePage {
+          color: black;
+          background-color: rgba(230, 236, 240, 0.7) !important;
+          padding-bottom: 0;
+        }
+        .header {
+          width: 100%;
+          padding: 10px;
+        }
+        .home-hero .btn {
+          background: #3aaed8 !important;
+          width: 200px;
+          margin-top: 20px;
+        }
+        .home-hero .insideText #messages .list-group-item {
+          display: flex;
+          align-items: flex-start;
+          padding: 7px 20px 12px;
+        }
+        #messages:not(.no-hover) .list-group-item:hover {
+          background-color: #e6ecf0;
+        }
+        .timeline-image {
+          border-radius: 50px;
+          height: 48px;
+          width: 48px;
+          margin: 2px 30px 10px 10px;
+        }
+        .btn:hover {
+          cursor: pointer;
+        }
+        a.btn.btn-danger,
+        a.btn.btn-danger:hover {
+          color: white;
+        }
+        /* .navbar-header {
+  margin: 0 auto;
+  } */
+        .react-toggle {
+          touch-action: pan-x;
+          display: inline-block;
+          position: relative;
+          cursor: pointer;
+          background-color: transparent;
+          border: 0;
+          padding: 0;
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+          -webkit-tap-highlight-color: transparent;
+        }
+        .react-toggle-screenreader-only {
+          border: 0;
+          clip: rect(0 0 0 0);
+          height: 1px;
+          margin: -1px;
+          overflow: hidden;
+          padding: 0;
+          position: absolute;
+          width: 1px;
+        }
+        .react-toggle--disabled {
+          cursor: not-allowed;
+          opacity: 0.5;
+          -webkit-transition: opacity 0.25s;
+          transition: opacity 0.25s;
+        }
+        .react-toggle-track {
+          width: 50px;
+          height: 24px;
+          padding: 0;
+          border-radius: 30px;
+          background-color: #4d4d4d;
+          -webkit-transition: all 0.2s ease;
+          transition: all 0.2s ease;
+        }
+        .react-toggle:hover:not(.react-toggle--disabled) .react-toggle-track {
+          background-color: #000000;
+        }
+        .react-toggle--checked .react-toggle-track {
+          background-color: #19ab27;
+        }
+        .react-toggle--checked:hover:not(.react-toggle--disabled)
+          .react-toggle-track {
+          background-color: #128d15;
+        }
+        .react-toggle-track-check {
+          position: absolute;
+          width: 14px;
+          height: 10px;
+          top: 0px;
+          bottom: 0px;
+          margin-top: auto;
+          margin-bottom: auto;
+          line-height: 0;
+          left: 8px;
+          opacity: 0;
+          -webkit-transition: opacity 0.25s ease;
+          transition: opacity 0.25s ease;
+        }
+        .react-toggle--checked .react-toggle-track-check {
+          opacity: 1;
+          -webkit-transition: opacity 0.25s ease;
+          transition: opacity 0.25s ease;
+        }
+        .react-toggle-track-x {
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          top: 0px;
+          bottom: 0px;
+          margin-top: auto;
+          margin-bottom: auto;
+          line-height: 0;
+          right: 10px;
+          opacity: 1;
+          -webkit-transition: opacity 0.25s ease;
+          transition: opacity 0.25s ease;
+        }
+        .react-toggle--checked .react-toggle-track-x {
+          opacity: 0;
+        }
+        .react-toggle-thumb {
+          -webkit-transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+          transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+          position: absolute;
+          top: 1px;
+          left: 1px;
+          width: 22px;
+          height: 22px;
+          border: 1px solid #4d4d4d;
+          border-radius: 50%;
+          background-color: #fafafa;
+          box-sizing: border-box;
+          -webkit-transition: all 0.25s ease;
+          transition: all 0.25s ease;
+        }
+        .react-toggle--checked .react-toggle-thumb {
+          left: 27px;
+          border-color: #19ab27;
+        }
+        .react-toggle--focus .react-toggle-thumb {
+          box-shadow: 0px 0px 2px 3px #0099e0;
+        }
+        .react-toggle:active:not(.react-toggle--disabled) .react-toggle-thumb {
+          box-shadow: 0px 0px 5px 5px #0099e0;
+        }
+        .admin-tabs {
+          padding-top: 25px;
+        }
+        .admin-user-access {
+          margin-top: 20px;
+        }
+        .dashboard-card:hover {
+          background-color: #f2f2f2;
+        }
+        .truck-plants {
+          margin: 20px;
+          text-align: center;
+        }
+        .react-bs-table table td,
+        .react-bs-table table th {
+          width: 275px;
+        }
+        .caret {
+          height: 0px;
+          width: 0px;
+          margin: 5px;
+          font-size: 13px;
+          font-weight: bold;
+          float: right;
+          color: darkgray;
+        }
+        :not(.dropup) .caret:after {
+          content: "\2191";
+        }
+        .dropdown .caret:after {
+          content: "\2191";
+        }
+        .dropup .caret:after {
+          content: "\2193";
+        }
+        .ui.blue.pointing.basic.label {
+          color: white !important;
+        }
+        .rt-th {
+          font-weight: bold;
+          font-size: 1.1em;
+        }
+        .wrapped {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+        /* Fixed header for semantic ui tables */
+        table.fixed-header thead tr:nth-child(1) th {
+          position: -webkit-sticky;
+          position: sticky;
+          top: 40px;
+          z-index: 10;
+        }
+        .leaflet-div-icon {
+          background: transparent;
+          border: none;
+        }
+      }
+      @media only screen and (max-width: 450px) {
+        .mynav {
+          background: -webkit-gradient(
+            linear,
+            left top,
+            right top,
+            from(#ffffff),
+            to(#3aaed8)
+          );
+          background: linear-gradient(to right, #ffffff, #3aaed8);
+          background-size: 100% 100%;
+        }
+        .imi-logo {
+          -webkit-filter: brightness(0) invert(1);
+          filter: brightness(0) invert(1);
+        }
+        .home-hero {
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          background-image: url("/public/default_background.jpeg");
+          background-size: cover;
+          background-position: center;
+        }
+        .home-text {
+          width: 100vw;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          margin: auto;
+          padding: 1rem;
+          top: 0;
+          left: 0;
+          font-size: 2rem;
+        }
+        #homePage {
+          color: black;
+          background-color: rgba(230, 236, 240, 0.7) !important;
+          padding-bottom: 0;
+        }
+        .header {
+          width: 100%;
+          padding: 10px;
+        }
+        .home-hero .btn {
+          background: #3aaed8 !important;
+          width: 200px;
+          margin-top: 20px;
+        }
+        .home-hero .insideText #messages .list-group-item {
+          display: flex;
+          align-items: flex-start;
+          padding: 7px 20px 12px;
+        }
+        #messages:not(.no-hover) .list-group-item:hover {
+          background-color: #e6ecf0;
+        }
+        .timeline-image {
+          border-radius: 50px;
+          height: 48px;
+          width: 48px;
+          margin: 2px 30px 10px 10px;
+        }
+        .btn:hover {
+          cursor: pointer;
+        }
+        a.btn.btn-danger,
+        a.btn.btn-danger:hover {
+          color: white;
+        }
+        /* .navbar-header {
+  margin: 0 auto;
+  } */
+        .react-toggle {
+          touch-action: pan-x;
+          display: inline-block;
+          position: relative;
+          cursor: pointer;
+          background-color: transparent;
+          border: 0;
+          padding: 0;
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+          -webkit-tap-highlight-color: transparent;
+        }
+        .react-toggle-screenreader-only {
+          border: 0;
+          clip: rect(0 0 0 0);
+          height: 1px;
+          margin: -1px;
+          overflow: hidden;
+          padding: 0;
+          position: absolute;
+          width: 1px;
+        }
+        .react-toggle--disabled {
+          cursor: not-allowed;
+          opacity: 0.5;
+          -webkit-transition: opacity 0.25s;
+          transition: opacity 0.25s;
+        }
+        .react-toggle-track {
+          width: 50px;
+          height: 24px;
+          padding: 0;
+          border-radius: 30px;
+          background-color: #4d4d4d;
+          -webkit-transition: all 0.2s ease;
+          transition: all 0.2s ease;
+        }
+        .react-toggle:hover:not(.react-toggle--disabled) .react-toggle-track {
+          background-color: #000000;
+        }
+        .react-toggle--checked .react-toggle-track {
+          background-color: #19ab27;
+        }
+        .react-toggle--checked:hover:not(.react-toggle--disabled)
+          .react-toggle-track {
+          background-color: #128d15;
+        }
+        .react-toggle-track-check {
+          position: absolute;
+          width: 14px;
+          height: 10px;
+          top: 0px;
+          bottom: 0px;
+          margin-top: auto;
+          margin-bottom: auto;
+          line-height: 0;
+          left: 8px;
+          opacity: 0;
+          -webkit-transition: opacity 0.25s ease;
+          transition: opacity 0.25s ease;
+        }
+        .react-toggle--checked .react-toggle-track-check {
+          opacity: 1;
+          -webkit-transition: opacity 0.25s ease;
+          transition: opacity 0.25s ease;
+        }
+        .react-toggle-track-x {
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          top: 0px;
+          bottom: 0px;
+          margin-top: auto;
+          margin-bottom: auto;
+          line-height: 0;
+          right: 10px;
+          opacity: 1;
+          -webkit-transition: opacity 0.25s ease;
+          transition: opacity 0.25s ease;
+        }
+        .react-toggle--checked .react-toggle-track-x {
+          opacity: 0;
+        }
+        .react-toggle-thumb {
+          -webkit-transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+          transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+          position: absolute;
+          top: 1px;
+          left: 1px;
+          width: 22px;
+          height: 22px;
+          border: 1px solid #4d4d4d;
+          border-radius: 50%;
+          background-color: #fafafa;
+          box-sizing: border-box;
+          -webkit-transition: all 0.25s ease;
+          transition: all 0.25s ease;
+        }
+        .react-toggle--checked .react-toggle-thumb {
+          left: 27px;
+          border-color: #19ab27;
+        }
+        .react-toggle--focus .react-toggle-thumb {
+          box-shadow: 0px 0px 2px 3px #0099e0;
+        }
+        .react-toggle:active:not(.react-toggle--disabled) .react-toggle-thumb {
+          box-shadow: 0px 0px 5px 5px #0099e0;
+        }
+        .admin-tabs {
+          padding-top: 25px;
+        }
+        .admin-user-access {
+          margin-top: 20px;
+        }
+        .dashboard-card:hover {
+          background-color: #f2f2f2;
+        }
+        .truck-plants {
+          margin: 20px;
+          text-align: center;
+        }
+        .react-bs-table table td,
+        .react-bs-table table th {
+          width: 275px;
+        }
+        .caret {
+          height: 0px;
+          width: 0px;
+          margin: 5px;
+          font-size: 13px;
+          font-weight: bold;
+          float: right;
+          color: darkgray;
+        }
+        :not(.dropup) .caret:after {
+          content: "\2191";
+        }
+        .dropdown .caret:after {
+          content: "\2191";
+        }
+        .dropup .caret:after {
+          content: "\2193";
+        }
+        .ui.blue.pointing.basic.label {
+          color: white !important;
+        }
+        .rt-th {
+          font-weight: bold;
+          font-size: 1.1em;
+        }
+        .wrapped {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+        /* Fixed header for semantic ui tables */
+        table.fixed-header thead tr:nth-child(1) th {
+          position: -webkit-sticky;
+          position: sticky;
+          top: 40px;
+          z-index: 10;
+        }
+        .leaflet-div-icon {
+          background: transparent;
+          border: none;
+        }
+        h1#homeMain {
+          font-size: 3.6em;
+        }
+        h4#homeSecond {
+          font-size: 1.6em;
+        }
+        a.ui.button.blue {
+          font-size: 1.3em;
+        }
+        a#homeForgot {
+          font-size: 1.3em;
+        }
+        div#homePage {
+          padding: 1.3em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <noscript> You need to enable JavaScript to run this app. </noscript>
+    <div id="root">
+      <div class="ui blue tiny inverted top fixed menu">
+        <a class="normal item" href="/">
+          <!-- Insert company logo here -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            style="width: 18px; height: 18px"
+            viewBox="0 0 512 512"
+          >
+            <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              fill="white"
+              d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"
+            />
+          </svg>
+        </a>
+        <div class="right item">
+          <a href="/auth/google" class="ui basic inverted button" role="button"
+            >Login</a
+          >
+        </div>
+      </div>
+      <div style="padding-top: 30px">
+        <div style="margin: 1rem">
+          <div>
+            <div class="ui sticky fixed" style="width: 70%; margin-left: 12.5%">
+              <div></div>
+            </div>
+            <div class="home-hero">
+              <div class="home-text">
+                <div
+                  class="ui secondary segment padded center aligned"
+                  id="homePage"
+                >
+                  <h1 id="homeMain">ERROR</h1>
+                  <h4 id="homeSecond">
+                    Sorry, we ran into an issue. Please return to login.
+                  </h4>
+                  <a class="ui button blue" href="/" style="margin-bottom: 20px"
+                    ><strong> Back to Login </strong></a
+                  >
+                  <br />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui blue small inverted bottom fixed five item menu">
+        <a href="/" class="ui basic inverted item" role="button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 576 512"
+            style="width: 18px; height: 18px"
+          >
+            <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              fill="white"
+              d="M64 0C28.7 0 0 28.7 0 64V352c0 35.3 28.7 64 64 64H240l-10.7 32H160c-17.7 0-32 14.3-32 32s14.3 32 32 32H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H346.7L336 416H512c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM512 64V352H64V64H512z"
+            />
+          </svg>
+          <span style="float: right; margin-top: 1px; margin-left: 5px"
+            >Frontend Repository</span
+          >
+        </a>
+        <a
+          href="https://github.com/johngaynor/express-server"
+          class="ui basic inverted item"
+          role="button"
+          target="_blank"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 512 512"
+            style="width: 18px; height: 18px"
+          >
+            <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              fill="white"
+              d="M64 32C28.7 32 0 60.7 0 96v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm48 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zM64 288c-35.3 0-64 28.7-64 64v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V352c0-35.3-28.7-64-64-64H64zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm56 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"
+            />
+          </svg>
+          <span style="float: right; margin-top: 1px; margin-left: 5px"
+            >Backend Repository</span
+          >
+        </a>
+        <a href="/support" class="ui basic inverted item" role="button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 512 512"
+            style="width: 18px; height: 18px"
+          >
+            <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              fill="white"
+              d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
+            />
+          </svg>
+          <span style="float: right; margin-top: 1px; margin-left: 5px"
+            >Report a Bug</span
+          >
+        </a>
+        <a href="/" class="ui basic inverted item" role="button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 640 512"
+            style="width: 18px; height: 18px"
+          >
+            <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              fill="white"
+              d="M320 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160zm156.8-48C462 361 397.4 416 320 416s-142-55-156.8-128H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H163.2C178 151 242.6 96 320 96s142 55 156.8 128H608c17.7 0 32 14.3 32 32s-14.3 32-32 32H476.8z"
+            />
+          </svg>
+          <span style="float: right; margin-top: 1px; margin-left: 5px"
+            >v0.0.0</span
+          >
+        </a>
+        <a
+          href="https://johngaynor.dev"
+          class="ui basic inverted item"
+          role="button"
+          target="_blank"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 640 512"
+            style="width: 18px; height: 18px"
+          >
+            <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              fill="white"
+              d="M64 96c0-35.3 28.7-64 64-64H512c35.3 0 64 28.7 64 64V352H512V96H128V352H64V96zM0 403.2C0 392.6 8.6 384 19.2 384H620.8c10.6 0 19.2 8.6 19.2 19.2c0 42.4-34.4 76.8-76.8 76.8H76.8C34.4 480 0 445.6 0 403.2zM281 209l-31 31 31 31c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-48-48c-9.4-9.4-9.4-24.6 0-33.9l48-48c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM393 175l48 48c9.4 9.4 9.4 24.6 0 33.9l-48 48c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l31-31-31-31c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"
+            />
+          </svg>
+          <span style="float: right; margin-top: 1px; margin-left: 5px"
+            >Developer Profile</span
+          >
+        </a>
+      </div>
+    </div>
+
+    <div id="fpCE_version" style="display: none">6.7.0</div>
+  </body>
+</html>
