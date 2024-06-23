@@ -6,7 +6,7 @@ router.post("/submit", (req, res) => {
 
   try {
     sendEmail(
-      "johngaynordev@gmail.com",
+      "johngaynordev@gmail.com tylergoodall3@gmail.com",
       null,
       null,
       `SUPPORT TICKET - ${type}`,
