@@ -9,6 +9,7 @@ router.get("/apps", async (req, res) => {
       left join apiUserAccess acc
           on app.id = acc.appId
       where acc.userId = ${userId}
+      or app.allUsers = 1
       `);
 
   res.status(200).json({ result });
