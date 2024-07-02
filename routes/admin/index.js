@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { poolPromise } = require("../../config/database");
+const adminFunctions = require("../../models/admin");
 
 router.get("/apps", async (req, res) => {
   const pool = await poolPromise;
@@ -53,6 +54,35 @@ router.post("/access/add", async (req, res) => {
           values ('${userId}', ${appId})
           `);
     res.status(200).json({ message: "deleted access" });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.post("/build", async (req, res) => {
+  const { version, changes, users } = req.body;
+  try {
+    const changePromises = [];
+    const userPromises = [];
+    // insert changes
+    changes.forEach((change) => {
+      changePromises.push(
+        adminFunctions.insertBuildChange(
+          version,
+          change.appId,
+          change.textId,
+          change.text
+        )
+      );
+    });
+    // insert affected users
+    users.forEach((user) => {
+      userPromises.push(adminFunctions.insertAffectedUser(version, user));
+    });
+
+    await Promise.all([...changePromises, ...userPromises]);
+
+    res.status(200).json({ message: "successfully published build" });
   } catch (error) {
     res.status(400).json({ error });
   }
