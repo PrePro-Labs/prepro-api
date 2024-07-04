@@ -8,6 +8,7 @@ module.exports = function (app, passport) {
   app.use("/api/admin", require("./admin"));
   app.use("/api/support", require("./support"));
   app.use("/api/logs", require("./logs"));
+  app.use("/api/fitness", require("./fitness"));
 
   app.get("/failure", function (req, res) {
     res.render("failure.html");
