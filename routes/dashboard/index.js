@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { poolPromise } = require("../../config/database");
+const dashboardFunctions = require("../../models/dashboard");
 
 router.get("/apps", async (req, res) => {
   const userId = req.user.id;
@@ -13,11 +14,12 @@ router.get("/apps", async (req, res) => {
       `);
 
   res.status(200).json({ result });
+});
 
-  router.get("/changelog", async (req, res) => {
-    const userId = req.user.id;
-    const pool = await poolPromise;
-    const [result] = await pool.query(`
+router.get("/changelog", async (req, res) => {
+  const userId = req.user.id;
+  const pool = await poolPromise;
+  const [result] = await pool.query(`
       select 
         bld.version,
         app.name,
@@ -36,8 +38,24 @@ router.get("/apps", async (req, res) => {
         bld.appId = acc.appId and 
         usr.seen = 0
       `);
-    res.status(200).json({ result });
-  });
+  res.status(200).json({ result });
+});
+
+router.post("/changelog", async (req, res) => {
+  const userId = req.user.id;
+  const { versions } = req.body;
+
+  try {
+    const poolPromises = [];
+    versions.forEach((v) => {
+      poolPromises.push(dashboardFunctions.updateChangeLogStatus(v, userId));
+    });
+
+    await Promise.all(poolPromises);
+    res.status(200).json({ message: "successfully updated change log status" });
+  } catch (error) {
+    res.status(200).json({ error });
+  }
 });
 
 module.exports = router;
