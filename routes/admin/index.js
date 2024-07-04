@@ -71,7 +71,8 @@ router.post("/build", async (req, res) => {
           version,
           change.appId,
           change.textId,
-          change.text
+          change.text,
+          change.type
         )
       );
     });
