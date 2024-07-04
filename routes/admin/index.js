@@ -60,15 +60,18 @@ router.post("/access/add", async (req, res) => {
 });
 
 router.post("/build", async (req, res) => {
-  const { version, changes, users } = req.body;
+  const { versionType, changes, users } = req.body;
+  const userId = req.user.id;
   try {
+    const versionId = await adminFunctions.insertNewBuild(versionType, userId);
+
     const changePromises = [];
     const userPromises = [];
     // insert changes
     changes.forEach((change) => {
       changePromises.push(
         adminFunctions.insertBuildChange(
-          version,
+          versionId,
           change.appId,
           change.textId,
           change.text,
@@ -78,13 +81,14 @@ router.post("/build", async (req, res) => {
     });
     // insert affected users
     users.forEach((user) => {
-      userPromises.push(adminFunctions.insertAffectedUser(version, user));
+      userPromises.push(adminFunctions.insertAffectedUser(versionId, user));
     });
 
     await Promise.all([...changePromises, ...userPromises]);
 
-    res.status(200).json({ message: "successfully published build" });
+    res.status(200).json({ versionId });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ error });
   }
 });

@@ -22,20 +22,24 @@ router.get("/changelog", async (req, res) => {
   const [result] = await pool.query(`
       select 
         bld.version,
+        bld.id,
         app.name,
-        bld.textId,
-        bld.text
+        cha.textId,
+        cha.text,
+        cha.type
       from builds bld
       left join buildUsers usr
-        on bld.version = usr.version
+        on bld.id = usr.versionId
+      left join buildChanges cha
+        on bld.id = cha.versionId
       left join apps app
-        on bld.appId = app.id
+        on cha.appId = app.id
       left join apiUserAccess acc
         on app.id = acc.appId
       where 
         usr.userId = '${userId}' and 
         usr.userId = acc.userId and
-        bld.appId = acc.appId and 
+        cha.appId = acc.appId and 
         usr.seen = 0
       `);
   res.status(200).json({ result });
