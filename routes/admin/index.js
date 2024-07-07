@@ -93,4 +93,18 @@ router.post("/build", async (req, res) => {
   }
 });
 
+router.get("/test/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const pool = await poolPromise;
+    const [result] = await pool.query(
+      `select * from apiUsers where email = ?`,
+      [id]
+    );
+    res.status(200).json({ result });
+  } catch (e) {
+    res.status(400).json(e);
+  }
+});
+
 module.exports = router;
