@@ -5,10 +5,13 @@ const dashboardFunctions = {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
-        const [result] = await pool.query(`
+        const [result] = await pool.query(
+          `
             update buildUsers set seen = 1
-            where versionId = '${versionId}' and userId = '${userId}'
-            `);
+            where versionId = ? and userId = ?
+            `,
+          [versionId, userId]
+        );
         resolve();
       } catch (e) {
         reject(e);

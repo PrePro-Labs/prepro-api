@@ -103,10 +103,13 @@ const adminFunctions = {
         }
         const newVersion = latestVersion.join(".");
         const newId = parseInt(result[0].id) + 1;
-        const [result2] = await pool.query(`
+        const [result2] = await pool.query(
+          `
           insert into builds (version, ranBy, date)
-          values ('${newVersion}', '${userId}', now())
-          `);
+          values (?, ?, now())
+          `,
+          [newVersion, userId]
+        );
         resolve(newId);
       } catch (e) {
         reject(e);
@@ -118,10 +121,13 @@ const adminFunctions = {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
-        const [result] = await pool.query(`
+        const [result] = await pool.query(
+          `
             insert into buildChanges (versionId, appId, textId, text, type)
-            values ('${versionId}', ${appId}, ${textId}, '${text}', '${type}')
-            `);
+            values (?, ?, ?, ?, ?)
+            `,
+          [versionId, appId, textId, text, type]
+        );
         resolve();
       } catch (e) {
         reject(e);
@@ -133,10 +139,13 @@ const adminFunctions = {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
-        const [result] = await pool.query(`
+        const [result] = await pool.query(
+          `
           insert into buildUsers (versionId, userId, seen)
-          values ('${versionId}', '${userId}', 0)
-          `);
+          values (?, ?, 0)
+          `,
+          [versionId, userId]
+        );
         resolve();
       } catch (e) {
         reject(e);

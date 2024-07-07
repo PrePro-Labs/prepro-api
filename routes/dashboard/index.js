@@ -2,6 +2,7 @@ const router = require("express").Router();
 const { poolPromise } = require("../../config/database");
 const dashboardFunctions = require("../../models/dashboard");
 
+// no canView middleware since these are accessed regardless of apps
 router.get("/apps", async (req, res) => {
   const userId = req.user.id;
   const pool = await poolPromise;

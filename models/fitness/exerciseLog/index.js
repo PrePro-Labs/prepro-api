@@ -9,8 +9,9 @@ const exerciseLogFunctions = {
           const result = await pool.query(
             `
             insert into workoutLog (userId, date, typeId, timeCompleted, comments) 
-            values('${userId}', '${date}', '${type}', '${timeCompleted}', '${comments}');
-            `
+            values(?, ?, ?, ?, ?);
+            `,
+            [userId, date, type, timeCompleted, comments]
           );
           resolve("insert");
         } else {
@@ -18,13 +19,13 @@ const exerciseLogFunctions = {
             `
             update workoutLog set
             ...
-            where id = ${workoutId};
-            `
+            where id = ?;
+            `,
+            [workoutId]
           );
           resolve("update");
         }
       } catch (e) {
-        console.log(e);
         reject(e);
       }
     });
