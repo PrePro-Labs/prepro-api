@@ -1,6 +1,84 @@
 const { poolPromise } = require("../../config/database");
 
 const adminFunctions = {
+  async getApps() {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        const [result] = await pool.query(`
+          select * from apps;
+          `);
+        resolve(result);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+
+  async getAccess() {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        const [result] = await pool.query(`
+          select * from apiUserAccess;
+          `);
+        resolve(result);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+
+  async getUsers() {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        const [result] = await pool.query(`
+          select * from apiUsers;
+          `);
+        resolve(result);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+
+  async deleteAccess(userId, appId) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        const [result] = await pool.query(
+          `
+          delete from apiUserAccess
+          where userId = ? and appId = ?;
+          `,
+          [userId, appId]
+        );
+        resolve(result);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+
+  async addAccess(userId, appId) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        const [result] = await pool.query(
+          `
+          insert into apiUserAccess (userId, appId)
+          values (?, ?)
+          `,
+          [userId, appId]
+        );
+        resolve(result);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+
   async insertNewBuild(versionType, userId) {
     return new Promise(async function (resolve, reject) {
       try {

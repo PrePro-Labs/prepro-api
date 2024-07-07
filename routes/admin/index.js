@@ -1,46 +1,40 @@
 const router = require("express").Router();
-const { poolPromise } = require("../../config/database");
 const adminFunctions = require("../../models/admin");
 const canAccess = require("../../models/middleware/canAccess");
 
 const canView = canAccess(1);
 
 router.get("/apps", canView, async (req, res) => {
-  const pool = await poolPromise;
-  const [result] = await pool.query(`
-      select * from apps;
-      `);
-
-  res.status(200).json({ result });
+  try {
+    const result = await adminFunctions.getApps();
+    res.status(200).json({ result });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
 });
 
 router.get("/access", canView, async (req, res) => {
-  const pool = await poolPromise;
-  const [result] = await pool.query(`
-      select * from apiUserAccess;
-      `);
-
-  res.status(200).json({ result });
+  try {
+    const result = await adminFunctions.getAccess();
+    res.status(200).json({ result });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
 });
 
 router.get("/users", canView, async (req, res) => {
-  const pool = await poolPromise;
-  const [result] = await pool.query(`
-      select * from apiUsers;
-      `);
-
-  res.status(200).json({ result });
+  try {
+    const result = await adminFunctions.getUsers();
+    res.status(200).json({ result });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
 });
 
 router.post("/access/delete", canView, async (req, res) => {
   const { userId, appId } = req.body;
-  const pool = await poolPromise;
-
   try {
-    const [result] = await pool.query(`
-        delete from apiUserAccess
-        where userId = '${userId}' and appId = ${appId}
-        `);
+    const result = await adminFunctions.deleteAccess(userId, appId);
     res.status(200).json({ message: "deleted access" });
   } catch (error) {
     res.status(400).json({ error });
@@ -49,13 +43,8 @@ router.post("/access/delete", canView, async (req, res) => {
 
 router.post("/access/add", canView, async (req, res) => {
   const { userId, appId } = req.body;
-  const pool = await poolPromise;
-
   try {
-    const [result] = await pool.query(`
-          insert into apiUserAccess (userId, appId)
-          values ('${userId}', ${appId})
-          `);
+    const result = await adminFunctions.addAccess(userId, appId);
     res.status(200).json({ message: "deleted access" });
   } catch (error) {
     res.status(400).json({ error });
@@ -91,7 +80,6 @@ router.post("/build", canView, async (req, res) => {
 
     res.status(200).json({ versionId });
   } catch (error) {
-    console.log(error);
     res.status(400).json({ error });
   }
 });
