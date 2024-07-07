@@ -1,9 +1,7 @@
 const config = require("../config");
 
 module.exports = function (app, passport) {
-  // test route
   app.use("/api/DEV/", require("./DEV"));
-  app.use("/api/tests", require("./tests"));
   app.use("/api/dashboard", require("./dashboard"));
   app.use("/api/admin", require("./admin"));
   app.use("/api/support", require("./support"));
