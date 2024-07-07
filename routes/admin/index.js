@@ -1,8 +1,11 @@
 const router = require("express").Router();
 const { poolPromise } = require("../../config/database");
 const adminFunctions = require("../../models/admin");
+const canAccess = require("../../models/middleware/canAccess");
 
-router.get("/apps", async (req, res) => {
+const canView = canAccess(1);
+
+router.get("/apps", canView, async (req, res) => {
   const pool = await poolPromise;
   const [result] = await pool.query(`
       select * from apps;
@@ -11,7 +14,7 @@ router.get("/apps", async (req, res) => {
   res.status(200).json({ result });
 });
 
-router.get("/access", async (req, res) => {
+router.get("/access", canView, async (req, res) => {
   const pool = await poolPromise;
   const [result] = await pool.query(`
       select * from apiUserAccess;
@@ -20,7 +23,7 @@ router.get("/access", async (req, res) => {
   res.status(200).json({ result });
 });
 
-router.get("/users", async (req, res) => {
+router.get("/users", canView, async (req, res) => {
   const pool = await poolPromise;
   const [result] = await pool.query(`
       select * from apiUsers;
@@ -29,7 +32,7 @@ router.get("/users", async (req, res) => {
   res.status(200).json({ result });
 });
 
-router.post("/access/delete", async (req, res) => {
+router.post("/access/delete", canView, async (req, res) => {
   const { userId, appId } = req.body;
   const pool = await poolPromise;
 
@@ -44,7 +47,7 @@ router.post("/access/delete", async (req, res) => {
   }
 });
 
-router.post("/access/add", async (req, res) => {
+router.post("/access/add", canView, async (req, res) => {
   const { userId, appId } = req.body;
   const pool = await poolPromise;
 
@@ -59,7 +62,7 @@ router.post("/access/add", async (req, res) => {
   }
 });
 
-router.post("/build", async (req, res) => {
+router.post("/build", canView, async (req, res) => {
   const { versionType, changes, users } = req.body;
   const userId = req.user.id;
   try {
@@ -90,20 +93,6 @@ router.post("/build", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(400).json({ error });
-  }
-});
-
-router.get("/test/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const pool = await poolPromise;
-    const [result] = await pool.query(
-      `select * from apiUsers where email = ?`,
-      [id]
-    );
-    res.status(200).json({ result });
-  } catch (e) {
-    res.status(400).json(e);
   }
 });
 
