@@ -1,15 +1,14 @@
 const router = require("express").Router();
-const { poolPromise } = require("../../config/database");
+const devFunctions = require("../../models/DEV");
 
-router.get("/create", async (req, res) => {
-  const pool = await poolPromise;
-  const [result] = await pool.query(
-    `
-    
-    `
-  );
-
-  res.status(200).json({ message: "query complete!", result });
+router.get("/query", async (req, res) => {
+  try {
+    const sql = ``;
+    const result = await devFunctions.executeDevQuery(sql);
+    res.status(200).json({ message: "query complete!", result });
+  } catch (error) {
+    res.status(400).json(error);
+  }
 });
 
 module.exports = router;
