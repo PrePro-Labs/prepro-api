@@ -30,6 +30,23 @@ const exerciseLogFunctions = {
       }
     });
   },
+  async getWorkoutLogs(userId) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        const [result] = await pool.query(
+          `
+            select * from workoutLog
+            where userId = ?
+            `,
+          [userId]
+        );
+        resolve(result);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
 };
 
 module.exports = exerciseLogFunctions;
