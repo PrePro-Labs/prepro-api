@@ -93,6 +93,29 @@ const exerciseLogFunctions = {
       }
     });
   },
+  async deleteWorkoutExercise(id) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        const result1 = await pool.query(
+          `
+            delete from workoutExercises where id = ?
+            `,
+          [id]
+        );
+
+        const result2 = await pool.query(
+          `
+            delete from workoutLogSets where workoutExerciseId = ?
+            `,
+          [id]
+        );
+        resolve("success");
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
 };
 
 module.exports = exerciseLogFunctions;

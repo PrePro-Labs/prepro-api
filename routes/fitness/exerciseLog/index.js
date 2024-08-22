@@ -37,4 +37,14 @@ router.get("/workouts", canView, async (req, res) => {
   }
 });
 
+router.delete("/workout/exercise/:id", canView, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await exerciseLogFunctions.deleteWorkoutExercise(id);
+    res.status(200).json({ message: "success" });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
 module.exports = router;
