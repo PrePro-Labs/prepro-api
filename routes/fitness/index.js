@@ -15,4 +15,14 @@ router.get("/exercises/types", canView, async (req, res) => {
   }
 });
 
+router.delete("/exercises/types/:id", canView, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await fitnessFunctions.deleteExerciseType(id);
+    res.status(200).json({ result });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
 module.exports = router;
