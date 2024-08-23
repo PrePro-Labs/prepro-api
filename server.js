@@ -66,11 +66,11 @@ app.use((req, res, next) => {
 });
 
 // Serve static files for the react frontend
-app.use(express.static(path.join(__dirname, "views/test-frontend/build")));
+app.use(express.static(path.join(__dirname, "views/prepro-frontend/build")));
 
 // if logged in, send to main page
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "views/test-frontend/build/index.html"));
+  res.sendFile(path.join(__dirname, "views/prepro-frontend/build/index.html"));
 });
 
 app.listen(3000, () => console.log("Server listening on port: 3000"));
