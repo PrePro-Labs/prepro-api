@@ -62,6 +62,22 @@ const fitnessFunctions = {
       }
     });
   },
+  async addExerciseType(name) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        const [result] = await pool.query(
+          `
+                insert into exerciseTypes (name) values (?)
+                `,
+          [name]
+        );
+        resolve(result);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
 };
 
 module.exports = fitnessFunctions;
