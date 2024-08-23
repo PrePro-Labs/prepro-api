@@ -17,6 +17,7 @@ const fitnessFunctions = {
     });
   },
   async deleteExerciseType(id) {
+    // should be able to delete these with cascade trigger
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
@@ -29,7 +30,7 @@ const fitnessFunctions = {
         );
         const [affectedLogs] = await pool.query(
           `
-          SELECT id FROM workoutExercises
+          SELECT id FROM workoutLogsExercises
           WHERE exerciseId = ?
           `,
           [id]
@@ -41,7 +42,7 @@ const fitnessFunctions = {
           // Delete workout log sets for affected exercises
           await pool.query(
             `
-            DELETE FROM workoutLogSets
+            DELETE FROM workoutLogsExercisesSets
             WHERE workoutExerciseId IN (?)
             `,
             [workoutExerciseIds]
@@ -50,7 +51,7 @@ const fitnessFunctions = {
           // Delete workout exercises
           await pool.query(
             `
-            DELETE FROM workoutExercises
+            DELETE FROM workoutLogsExercises
             WHERE id IN (?)
             `,
             [workoutExerciseIds]

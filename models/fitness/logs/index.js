@@ -8,7 +8,7 @@ const logFunctions = {
         if (!workoutId) {
           const result = await pool.query(
             `
-            insert into workoutLog (userId, date, type, timeCompleted, comments)
+            insert into workoutLogs (userId, date, type, timeCompleted, comments)
             values(?, ?, ?, ?, ?);
             `,
             [userId, date, type, timeCompleted, comments]
@@ -17,7 +17,7 @@ const logFunctions = {
         } else {
           const result = await pool.query(
             `
-            update workoutLog set
+            update workoutLogs set
             type = ?,
             timeCompleted = ?,
             comments = ?
@@ -39,7 +39,7 @@ const logFunctions = {
         // get summaries
         const [summaries] = await pool.query(
           `
-            select * from workoutLog
+            select * from workoutLogs
             where userId = ?
             `,
           [userId]
@@ -48,8 +48,8 @@ const logFunctions = {
         // get exercises
         const [exercises] = await pool.query(
           `
-            select ex.* from workoutExercises ex
-            left join workoutLog log 
+            select ex.* from workoutLogsExercises ex
+            left join workoutLogs log 
               on ex.workoutId = log.id
             where log.userId = ?
             `,
@@ -59,10 +59,10 @@ const logFunctions = {
         // get sets
         const [sets] = await pool.query(
           `
-          select sets.* from workoutLogSets sets
-          left join workoutExercises ex 
+          select sets.* from workoutLogsExercisesSets sets
+          left join workoutLogsExercises ex 
             on sets.workoutExerciseId = ex.id
-          left join workoutLog log
+          left join workoutLogs log
             on ex.workoutId = log.id
           where log.userId = ?
           `,
@@ -94,19 +94,20 @@ const logFunctions = {
     });
   },
   async deleteWorkoutExercise(id) {
+    // should be able to shorten this after adding in cascade trigger
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
         const result1 = await pool.query(
           `
-            delete from workoutExercises where id = ?
+            delete from workoutLogsExercises where id = ?
             `,
           [id]
         );
 
         const result2 = await pool.query(
           `
-            delete from workoutLogSets where workoutExerciseId = ?
+            delete from workoutLogsSets where workoutExerciseId = ?
             `,
           [id]
         );
@@ -131,7 +132,7 @@ const logFunctions = {
           // insert
           const result = await pool.query(
             `
-            INSERT INTO workoutExercises
+            INSERT INTO workoutLogsExercises
             (workoutId, exerciseId)
             VALUES (?, ?)
             `,
@@ -144,7 +145,7 @@ const logFunctions = {
           const setPromises = sets.map((s, i) => {
             return pool.query(
               `
-              INSERT INTO workoutLogSets
+              INSERT INTO workoutLogsExercisesSets
               (workoutExerciseId, orderId, weight, reps)
               VALUES (?, ?, ?, ?)
               `,
