@@ -116,6 +116,63 @@ const exerciseLogFunctions = {
       }
     });
   },
+  async editWorkoutExercise(
+    workoutId,
+    exerciseId,
+    restTime,
+    comments,
+    workoutExerciseId,
+    sets
+  ) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        if (!workoutExerciseId) {
+          // insert
+          const result = await pool.query(
+            `
+            INSERT INTO workoutExercises
+            (workoutId, exerciseId)
+            VALUES (?, ?)
+            `,
+            [workoutId, exerciseId]
+          );
+
+          // Get the id of the newly inserted row
+          const workoutExerciseId = result[0].insertId;
+
+          const setPromises = sets.map((s, i) => {
+            return pool.query(
+              `
+              INSERT INTO workoutLogSets
+              (workoutExerciseId, orderId, weight, reps)
+              VALUES (?, ?, ?, ?)
+              `,
+              [workoutExerciseId, i, s.weight, s.reps]
+            );
+          });
+
+          await Promise.all(setPromises);
+          resolve("insert");
+        } else {
+          // edit
+          // const result = await pool.query(
+          //   `
+          //   update workoutLog set
+          //   type = ?,
+          //   timeCompleted = ?,
+          //   comments = ?
+          //   where id = ?;
+          //   `,
+          //   [type, timeCompleted, comments, workoutId]
+          // );
+          resolve("update");
+        }
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
 };
 
 module.exports = exerciseLogFunctions;

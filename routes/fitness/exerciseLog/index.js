@@ -47,4 +47,27 @@ router.delete("/workout/exercise/:id", canView, async (req, res) => {
   }
 });
 
+router.post("/workout/exercises", canView, async (req, res) => {
+  const { workoutId, exerciseId, restTime, comments, workoutExerciseId, sets } =
+    req.body;
+
+  try {
+    const method = await exerciseLogFunctions.editWorkoutExercise(
+      workoutId,
+      exerciseId,
+      restTime,
+      comments,
+      workoutExerciseId,
+      sets
+    );
+    res.status(200).json({
+      message: `${
+        method === "insert" ? "inserted" : "updated"
+      } workout successfully`,
+    });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
 module.exports = router;
