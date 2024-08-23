@@ -4,7 +4,8 @@ const canAccess = require("../../models/middleware/canAccess");
 
 const canView = canAccess(3);
 
-router.use("/logs", require("./exerciseLog"));
+router.use("/logs", require("./logs"));
+router.use("/templates", require("./templates"));
 
 router.get("/exercises/types", canView, async (req, res) => {
   try {

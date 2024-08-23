@@ -1,6 +1,6 @@
 const { poolPromise } = require("../../../config/database");
 
-const exerciseLogFunctions = {
+const logFunctions = {
   async editWorkout(workoutId, userId, date, type, timeCompleted, comments) {
     return new Promise(async function (resolve, reject) {
       try {
@@ -175,4 +175,4 @@ const exerciseLogFunctions = {
   },
 };
 
-module.exports = exerciseLogFunctions;
+module.exports = logFunctions;
