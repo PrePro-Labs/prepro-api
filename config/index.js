@@ -1,6 +1,6 @@
 const config = {
-  passportCallbackURL: "http://localhost:3000/auth/google/callback",
-  routesIndexRedirectURL: "http://localhost:3000/",
+  passportCallbackURL: process.env.PASSPORT_CALLBACK_URL,
+  routesIndexRedirectURL: process.env.ROUTES_INDEX_REDIRECT_URL,
   mySQLConfig: {
     connectionLimit: 5,
     host: process.env.MYSQL_CONNECTION_HOST,
@@ -16,7 +16,7 @@ const config = {
     token_uri: "https://oauth2.googleapis.com/token",
     auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
     client_secret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
-    redirect_uris: ["http://localhost:3000/auth/google/callback"],
+    redirect_uris: [process.env.GOOGLE_AUTH_REDIRECT_URIS],
   },
 };
 
