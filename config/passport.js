@@ -18,13 +18,13 @@ module.exports = function (passport) {
     try {
       const pool = await poolPromise;
       const [result] = await pool.query(
-        `Select * from apiUsers where id = '${id}'`
+        `Select * from apiUsers where id = ${id}`
       );
 
       if (result[0]) done(null, result[0]);
       else throw `Nothing returned for ${id}`;
     } catch (err) {
-      console.log("DB/Passport sign in error: ", err);
+      console.log("DB/Passport sign in error (#6236): ", err);
     }
   });
   passport.use(
@@ -40,7 +40,7 @@ module.exports = function (passport) {
           try {
             const pool = await poolPromise;
             const [result] = await pool.query(
-              `Select * from apiUsers where id = '${userProfile.id}'`
+              `Select * from apiUsers where id = ${userProfile.id}`
             );
 
             if (result[0]) {
@@ -59,12 +59,12 @@ module.exports = function (passport) {
 
               const pool2 = await poolPromise;
               const [result] = await pool2.query(
-                `insert into apiUsers (id, name, email) values ('${user.google.id}', '${user.google.name}', '${user.google.email}')`
+                `insert into apiUsers (id, name, email) values (${user.google.id}, '${user.google.name}', '${user.google.email}')`
               );
               return done(null, user);
             }
           } catch (err) {
-            console.log("DB/Passport sign in error: ", err);
+            console.log("DB/Passport sign in error (#1242): ", err);
           }
         });
 

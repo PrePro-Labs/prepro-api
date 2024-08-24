@@ -117,16 +117,16 @@ const adminFunctions = {
     });
   },
 
-  async insertBuildChange(versionId, appId, textId, text, type) {
+  async insertBuildChange(buildId, appId, textId, text, type) {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
         const [result] = await pool.query(
           `
-            insert into buildChanges (versionId, appId, textId, text, type)
+            insert into buildChanges (buildId, appId, textId, text, type)
             values (?, ?, ?, ?, ?)
             `,
-          [versionId, appId, textId, text, type]
+          [buildId, appId, textId, text, type]
         );
         resolve();
       } catch (e) {
@@ -135,16 +135,16 @@ const adminFunctions = {
     });
   },
 
-  async insertAffectedUser(versionId, userId) {
+  async insertAffectedUser(buildId, userId) {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
         const [result] = await pool.query(
           `
-          insert into buildUsers (versionId, userId, seen)
+          insert into buildUserStatus (buildId, userId, seen)
           values (?, ?, 0)
           `,
-          [versionId, userId]
+          [buildId, userId]
         );
         resolve();
       } catch (e) {

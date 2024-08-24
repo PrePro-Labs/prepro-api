@@ -6,10 +6,6 @@ const poolPromise = (async function () {
     const pool = await mysql.createPool(config.mySQLConfig);
 
     console.log("Connected to MySQL Database");
-    // pool.query(
-    //   "CREATE TABLE apiUsers ( id VARCHAR(55) PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) UNIQUE)"
-    // );
-    // console.log('Ran Query');
 
     return pool;
   } catch (err) {

@@ -29,10 +29,10 @@ router.get("/changelog", async (req, res) => {
         cha.text,
         cha.type
       from builds bld
-      left join buildUsers usr
-        on bld.id = usr.versionId
+      left join buildUserStatus usr
+        on bld.id = usr.buildId
       left join buildChanges cha
-        on bld.id = cha.versionId
+        on bld.id = cha.buildId
       left join apps app
         on cha.appId = app.id
       left join apiUserAccess acc

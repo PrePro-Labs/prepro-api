@@ -1,37 +1,6 @@
 const { poolPromise } = require("../../../config/database");
 
 const logFunctions = {
-  async editWorkout(workoutId, userId, date, type, timeCompleted, comments) {
-    return new Promise(async function (resolve, reject) {
-      try {
-        const pool = await poolPromise;
-        if (!workoutId) {
-          const result = await pool.query(
-            `
-            insert into workoutLogs (userId, date, type, timeCompleted, comments)
-            values(?, ?, ?, ?, ?);
-            `,
-            [userId, date, type, timeCompleted, comments]
-          );
-          resolve("insert");
-        } else {
-          const result = await pool.query(
-            `
-            update workoutLogs set
-            type = ?,
-            timeCompleted = ?,
-            comments = ?
-            where id = ?;
-            `,
-            [type, timeCompleted, comments, workoutId]
-          );
-          resolve("update");
-        }
-      } catch (e) {
-        reject(e);
-      }
-    });
-  },
   async getWorkoutLogs(userId) {
     return new Promise(async function (resolve, reject) {
       try {
@@ -93,25 +62,39 @@ const logFunctions = {
       }
     });
   },
-  async deleteWorkoutExercise(id) {
-    // should be able to shorten this after adding in cascade trigger
+  async editWorkoutSummary(
+    workoutId,
+    userId,
+    date,
+    type,
+    timeCompleted,
+    comments
+  ) {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
-        const result1 = await pool.query(
-          `
-            delete from workoutLogsExercises where id = ?
+        if (!workoutId) {
+          const result = await pool.query(
+            `
+            insert into workoutLogs (userId, date, type, timeCompleted, comments)
+            values(?, ?, ?, ?, ?);
             `,
-          [id]
-        );
-
-        const result2 = await pool.query(
-          `
-            delete from workoutLogsSets where workoutExerciseId = ?
+            [userId, date, type, timeCompleted, comments]
+          );
+          resolve("insert");
+        } else {
+          const result = await pool.query(
+            `
+            update workoutLogs set
+            type = ?,
+            timeCompleted = ?,
+            comments = ?
+            where id = ?;
             `,
-          [id]
-        );
-        resolve("success");
+            [type, timeCompleted, comments, workoutId]
+          );
+          resolve("update");
+        }
       } catch (e) {
         reject(e);
       }
@@ -133,10 +116,10 @@ const logFunctions = {
           const result = await pool.query(
             `
             INSERT INTO workoutLogsExercises
-            (workoutId, exerciseId)
-            VALUES (?, ?)
+            (workoutId, exerciseId, restTime, comments)
+            VALUES (?, ?, ?, ?)
             `,
-            [workoutId, exerciseId]
+            [workoutId, exerciseId, restTime, comments]
           );
 
           // Get the id of the newly inserted row
@@ -157,6 +140,9 @@ const logFunctions = {
           resolve("insert");
         } else {
           // edit
+          await pool.query(`
+            
+            `);
           // const result = await pool.query(
           //   `
           //   update workoutLog set
@@ -169,6 +155,38 @@ const logFunctions = {
           // );
           resolve("update");
         }
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  async deleteWorkoutSummary(id) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        await pool.query(
+          `
+            delete from workoutLogs where id = ?
+            `,
+          [id]
+        );
+        resolve("success");
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  async deleteWorkoutExercise(id) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        await pool.query(
+          `
+            delete from workoutLogsExercises where id = ?
+            `,
+          [id]
+        );
+        resolve("success");
       } catch (e) {
         reject(e);
       }

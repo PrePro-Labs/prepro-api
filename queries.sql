@@ -1,122 +1,137 @@
--- For any row that has a FK, if the corresponding PK is deleted, I want to cascade and delete related rows
-
-create table apiUsers (
-    id varchar(55) primary key,
-    name varchar(55),
-    email varchar(255),
-    admin bool default(0)
+CREATE TABLE apiUsers (
+    id VARCHAR(55) PRIMARY KEY,
+    name VARCHAR(55),
+    email VARCHAR(255),
+    admin TINYINT(1) DEFAULT 0
 );
 
-create table apiUserAccess (
-    appId int,
-    userId varchar(55), -- fk apiUsers.id
-    unique(appId, userId)
+CREATE TABLE apps (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(55) UNIQUE,
+    description VARCHAR(255) NOT NULL,
+    link VARCHAR(55) NOT NULL,
+    restricted TINYINT(1) DEFAULT 0,
+    allUsers TINYINT(1) DEFAULT 0
 );
 
-create table apps (
-    id int primary key auto_increment,
-    name varchar(55) unique,
-    description varchar(255) not null,
-    link varchar(55) not null,
-    restricted bool default(0)
+CREATE TABLE apiUserAccess (
+    appId INT,
+    userId VARCHAR(55),
+    PRIMARY KEY(appId, userId),
+    FOREIGN KEY (userId) REFERENCES apiUsers(id) ON DELETE CASCADE
 );
 
-create table builds (
-    id int primary key auto_increment,
-    version varchar(55) unique, -- do you need to specify not null as well?
-    ranBy varchar(55) not null, -- fk apiUsers.id
-    date date not null
+CREATE TABLE builds (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    version VARCHAR(55) UNIQUE NOT NULL,
+    ranBy VARCHAR(55) NOT NULL,
+    date DATE NOT NULL,
+    FOREIGN KEY (ranBy) REFERENCES apiUsers(id) ON DELETE CASCADE
 );
 
-create table buildChanges (
-    buildId int, -- fk builds.id
-    appId int, -- fk apps.appId
-    textId int not null,
-    text varchar(255) not null,
-    type varchar(55) not null,
-    primary key(buildId, appId, textId)
+CREATE TABLE buildChanges (
+    buildId INT,
+    appId INT,
+    textId INT NOT NULL,
+    text VARCHAR(255) NOT NULL,
+    type VARCHAR(55) NOT NULL,
+    PRIMARY KEY (buildId, appId, textId),
+    FOREIGN KEY (buildId) REFERENCES builds(id) ON DELETE CASCADE,
+    FOREIGN KEY (appId) REFERENCES apps(id) ON DELETE CASCADE
 );
 
-create table buildUserStatus (
-    buildId int, -- fk builds.id
-    userId varchar(55), -- fk apiUsers.id
-    seen bool default(0),
-    primary key(buildId, userId, seen)
+CREATE TABLE buildUserStatus (
+    buildId INT,
+    userId VARCHAR(55),
+    seen TINYINT(1) DEFAULT 0,
+    PRIMARY KEY (buildId, userId),
+    FOREIGN KEY (buildId) REFERENCES builds(id) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES apiUsers(id) ON DELETE CASCADE
 );
 
-create table dailyLogs (
-    id int primary key auto_increment,l
-    date date not null,
-    userId varchar(55), -- fk apiUsers.id
-    amWeight int, -- needs to include 1 decimal place...
-    sleepQuality int,
-    sleepHours int,
-    stress int,
-    mood int,
-    soreness int,
-    energy int,
-    pmWeight int, --same as amWeight
-    workoutComments varchar(255),
-    dayComments varchar(255),
-    unique(date, userId)
+CREATE TABLE dailyLogs (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    date DATE NOT NULL,
+    userId VARCHAR(55),
+    amWeight DECIMAL(5, 1),
+    sleepQuality INT,
+    sleepHours INT,
+    stress INT,
+    mood INT,
+    soreness INT,
+    energy INT,
+    pmWeight DECIMAL(5, 1),
+    workoutComments VARCHAR(255),
+    dayComments VARCHAR(255),
+    UNIQUE (date, userId),
+    FOREIGN KEY (userId) REFERENCES apiUsers(id) ON DELETE CASCADE
 );
 
-create table exerciseTypes (
-    id int primary key auto_increment,
-    name varchar(255) unique, 
-    pictureUrl varchar(255)
+CREATE TABLE exerciseTypes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) UNIQUE,
+    pictureUrl VARCHAR(255)
 );
 
-create table workoutLogs (
-    id int primary key auto_increment,
-    userId varchar(55), -- fk apiUsers.id
-    date varchar(11),
-    timeCompleted time, -- not sure what the datatype for this one is, its XX:xx:xx
-    comments varchar(255),
-    type varchar(55),
-    unique(userId, date)
+
+CREATE TABLE workoutLogs (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    userId VARCHAR(55), 
+    date DATE NOT NULL, 
+    timeCompleted TIME, 
+    comments VARCHAR(255),
+    type VARCHAR(55),
+    UNIQUE (userId, date),
+    FOREIGN KEY (userId) REFERENCES apiUsers(id) ON DELETE CASCADE
 );
 
-create table workoutLogsExercises (
-    id int primary key auto_increment,
-    workoutId int, -- pk workoutLogs.id
-    exerciseId int, -- pk exerciseTypes.id
-    restTime varchar(55),
-    comments varchar(255),
-    unique(workoutId, exerciseId)
+CREATE TABLE workoutLogsExercises (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    workoutId INT,
+    exerciseId INT,
+    restTime VARCHAR(55),
+    comments VARCHAR(255),
+    UNIQUE (workoutId, exerciseId),
+    FOREIGN KEY (workoutId) REFERENCES workoutLogs(id) ON DELETE CASCADE,
+    FOREIGN KEY (exerciseId) REFERENCES exerciseTypes(id) ON DELETE CASCADE
 );
 
-create table workoutLogsExercisesSets (
-    id int primary key auto_increment,
-    workoutExerciseId int, -- fk workoutExercises.id
-    orderId int,
-    weight int,
-    reps int,
-    unique(workoutExerciseId, orderId)
+CREATE TABLE workoutLogsExercisesSets (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    workoutExerciseId INT,
+    orderId INT,
+    weight INT,
+    reps INT,
+    UNIQUE (workoutExerciseId, orderId),
+    FOREIGN KEY (workoutExerciseId) REFERENCES workoutLogsExercises(id) ON DELETE CASCADE
 );
 
-create table workoutTemplates (
-    id int primary key auto_increment,
-    userId varchar(55), -- fk apiUsers.id
-    name varchar(55),
-    unique(userId, name)
+CREATE TABLE workoutTemplates (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    userId VARCHAR(55),
+    name VARCHAR(55),
+    UNIQUE (userId, name),
+    FOREIGN KEY (userId) REFERENCES apiUsers(id) ON DELETE CASCADE
 );
 
-create table workoutTemplatesExercises (
-    id int primary key auto_increment,
-    templateId int, -- fk workoutTemplates.id
-    exerciseId int, -- fk exerciseTypes.id
-    restTime varchar(55),
-    comments varchar(255),
-    unique(templateId, exerciseId)
+CREATE TABLE workoutTemplatesExercises (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    templateId INT,
+    exerciseId INT,
+    restTime VARCHAR(55),
+    comments VARCHAR(255),
+    UNIQUE (templateId, exerciseId),
+    FOREIGN KEY (templateId) REFERENCES workoutTemplates(id) ON DELETE CASCADE,
+    FOREIGN KEY (exerciseId) REFERENCES exerciseTypes(id) ON DELETE CASCADE
 );
 
-create table workoutTemplatesExercisesSets (
-    id int primary key auto_increment,
-    templateExerciseId int, -- fk workoutTemplatesExercises.id
-    orderId int,
-    reps int not null,
-    unique(templateExerciseId, orderId)
+CREATE TABLE workoutTemplatesExercisesSets (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    templateExerciseId INT,
+    orderId INT,
+    reps INT NOT NULL,
+    UNIQUE (templateExerciseId, orderId),
+    FOREIGN KEY (templateExerciseId) REFERENCES workoutTemplatesExercises(id) ON DELETE CASCADE
 );
 
 --------------------INSERT STATEMENTS FOR PRE EXISTING DATA----------------------
