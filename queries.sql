@@ -70,7 +70,9 @@ CREATE TABLE dailyLogs (
 CREATE TABLE exerciseTypes (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) UNIQUE,
-    pictureUrl VARCHAR(255)
+    pictureUrl VARCHAR(255),
+    target INT NOT NULL,
+    FOREIGN KEY (target) REFERENCES exerciseTargets(id) ON DELETE CASCADE
 );
 
 
@@ -133,6 +135,11 @@ CREATE TABLE workoutTemplatesExercisesSets (
     reps INT NOT NULL,
     UNIQUE (templateExerciseId, orderId),
     FOREIGN KEY (templateExerciseId) REFERENCES workoutTemplatesExercises(id) ON DELETE CASCADE
+);
+
+CREATE TABLE exerciseTargets (
+id INT PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(55) UNIQUE
 );
 
 --------------------INSERT STATEMENTS FOR PRE EXISTING DATA----------------------

@@ -27,10 +27,10 @@ router.delete("/exercises/types/:id", canView, async (req, res) => {
 });
 
 router.post("/exercises/types", canView, async (req, res) => {
-  const { name } = req.body;
+  const { name, target } = req.body;
 
   try {
-    const method = await fitnessFunctions.addExerciseType(name);
+    const method = await fitnessFunctions.addExerciseType(name, target);
     res.status(200).json({
       message: "Added exercise type successfully",
     });

@@ -63,15 +63,15 @@ const fitnessFunctions = {
       }
     });
   },
-  async addExerciseType(name) {
+  async addExerciseType(name, target) {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
         const [result] = await pool.query(
           `
-                insert into exerciseTypes (name) values (?)
+                insert into exerciseTypes (name, target) values (?, ?)
                 `,
-          [name]
+          [name, target]
         );
         resolve(result);
       } catch (e) {
