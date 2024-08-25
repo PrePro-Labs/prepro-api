@@ -40,8 +40,14 @@ router.post("/summary", canView, async (req, res) => {
 
 // updating workout exercises
 router.post("/exercises", canView, async (req, res) => {
-  const { workoutId, exerciseId, restTime, comments, workoutExerciseId, sets } =
-    req.body;
+  const {
+    parentId: workoutId,
+    exerciseId,
+    restTime,
+    comments,
+    id,
+    sets,
+  } = req.body;
 
   try {
     const method = await logFunctions.editWorkoutExercise(
@@ -49,7 +55,7 @@ router.post("/exercises", canView, async (req, res) => {
       exerciseId,
       restTime,
       comments,
-      workoutExerciseId,
+      id,
       sets
     );
     res.status(200).json({

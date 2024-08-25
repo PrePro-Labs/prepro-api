@@ -105,13 +105,13 @@ const logFunctions = {
     exerciseId,
     restTime,
     comments,
-    workoutExerciseId,
+    id,
     sets
   ) {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
-        if (!workoutExerciseId) {
+        if (!id) {
           // insert
           const result = await pool.query(
             `
@@ -140,19 +140,37 @@ const logFunctions = {
           resolve("insert");
         } else {
           // edit
-          await pool.query(`
-            
-            `);
-          // const result = await pool.query(
-          //   `
-          //   update workoutLog set
-          //   timeStarted = ?,
-          //   timeCompleted = ?,
-          //   comments = ?
-          //   where id = ?;
-          //   `,
-          //   [timeStarted, timeCompleted, comments, workoutId]
-          // );
+          await pool.query(
+            `
+            UPDATE workoutLogsExercises
+            set exerciseId = ?, restTime = ?, comments = ?
+            where id = ? 
+            `,
+            [exerciseId, restTime, comments, id]
+          );
+
+          // delete current sets
+          await pool.query(
+            `
+            delete from workoutLogsExercisesSets
+            where workoutExerciseId = ?
+            `,
+            [id]
+          );
+
+          const setPromises = sets
+            .filter((s) => s.reps)
+            .map((s, i) => {
+              return pool.query(
+                `
+                insert into workoutLogsExercisesSets
+                (workoutExerciseId, orderId, reps) values (?, ?, ?)
+                `,
+                [id, i, s.reps]
+              );
+            });
+
+          await Promise.all(setPromises);
           resolve("update");
         }
       } catch (e) {

@@ -64,7 +64,7 @@ const templateFunctions = {
   },
 
   async editTemplateExercise(
-    templateExerciseId,
+    id,
     templateId,
     exerciseId,
     sets,
@@ -73,16 +73,8 @@ const templateFunctions = {
   ) {
     return new Promise(async function (resolve, reject) {
       try {
-        console.log("params", {
-          templateExerciseId,
-          templateId,
-          exerciseId,
-          sets,
-          restTime,
-          comments,
-        });
         const pool = await poolPromise;
-        if (!templateExerciseId) {
+        if (!id) {
           // insert
           const result = await pool.query(
             `
@@ -119,7 +111,7 @@ const templateFunctions = {
             set exerciseId = ?, restTime = ?, comments = ?
             where id = ? 
             `,
-            [exerciseId, restTime, comments, templateExerciseId]
+            [exerciseId, restTime, comments, id]
           );
 
           // delete current sets
@@ -128,7 +120,7 @@ const templateFunctions = {
             delete from workoutTemplatesExercisesSets
             where templateExerciseId = ?
             `,
-            [templateExerciseId]
+            [id]
           );
 
           const setPromises = sets
@@ -139,7 +131,7 @@ const templateFunctions = {
                 insert into workoutTemplatesExercisesSets
                 (templateExerciseId, orderId, reps) values (?, ?, ?)
                 `,
-                [templateExerciseId, i, s.reps]
+                [id, i, s.reps]
               );
             });
 

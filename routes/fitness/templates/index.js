@@ -16,8 +16,8 @@ router.get("/", canView, async (req, res) => {
 
 router.post("/exercise", canView, async (req, res) => {
   const {
-    templateExerciseId,
-    templateId,
+    id, // unique id for the workout/template exercise row
+    parentId: templateId,
     exerciseId,
     sets,
     restTime,
@@ -26,7 +26,7 @@ router.post("/exercise", canView, async (req, res) => {
 
   try {
     const method = await templateFunctions.editTemplateExercise(
-      templateExerciseId,
+      id,
       templateId,
       exerciseId,
       sets,
