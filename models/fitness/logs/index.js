@@ -192,6 +192,68 @@ const logFunctions = {
       }
     });
   },
+  async copyWorkoutFromTemplate(workoutId, templateId) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+
+        // Fetch template exercises
+        const [templateExercises] = await pool.query(
+          `
+          SELECT * FROM workoutTemplatesExercises
+          WHERE templateId = ?
+          `,
+          [templateId]
+        );
+
+        // For each template exercise, insert it into workoutLogsExercises
+        const insertExercisesPromises = templateExercises.map(async (e) => {
+          const [result] = await pool.query(
+            `
+            INSERT INTO workoutLogsExercises
+            (workoutId, exerciseId, restTime, comments)
+            VALUES (?, ?, ?, ?)
+            `,
+            [workoutId, e.exerciseId, e.restTime, e.comments]
+          );
+
+          // Get the inserted workoutLogsExerciseId
+          const workoutLogsExerciseId = result.insertId;
+
+          // Fetch sets associated with the current template exercise
+          const [templateSets] = await pool.query(
+            `
+            SELECT * FROM workoutTemplatesExercisesSets
+            WHERE templateExerciseId = ?
+            `,
+            [e.id]
+          );
+
+          // Insert each set into workoutLogsExercisesSets
+          const insertSetsPromises = templateSets.map((set) =>
+            pool.query(
+              `
+              INSERT INTO workoutLogsExercisesSets
+              (workoutExerciseId, orderId, reps)
+              VALUES (?, ?, ?)
+              `,
+              [workoutLogsExerciseId, set.orderId, set.reps]
+            )
+          );
+
+          // Wait for all sets to be inserted
+          await Promise.all(insertSetsPromises);
+        });
+
+        // Wait for all exercises and their sets to be inserted
+        await Promise.all(insertExercisesPromises);
+
+        resolve("complete");
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
 };
 
 module.exports = logFunctions;

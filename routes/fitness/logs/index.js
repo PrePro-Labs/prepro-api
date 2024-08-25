@@ -84,4 +84,18 @@ router.delete("/exercise/:id", canView, async (req, res) => {
   }
 });
 
+// copy workout from template
+router.post("/copy", canView, async (req, res) => {
+  const { workoutId, templateId } = req.body;
+
+  try {
+    await logFunctions.copyWorkoutFromTemplate(workoutId, templateId);
+    res.status(200).json({
+      message: "Copied workout successfully",
+    });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
 module.exports = router;

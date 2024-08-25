@@ -80,9 +80,9 @@ CREATE TABLE workoutLogs (
     id INT PRIMARY KEY AUTO_INCREMENT,
     userId VARCHAR(55), 
     date VARCHAR(11) NOT NULL, 
-    timeCompleted TIME, 
+    timeStarted TIME,
+    timeCompleted TIME,
     comments VARCHAR(255),
-    type VARCHAR(55),
     UNIQUE (userId, date),
     FOREIGN KEY (userId) REFERENCES apiUsers(id) ON DELETE CASCADE
 );
