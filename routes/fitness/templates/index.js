@@ -14,16 +14,42 @@ router.get("/", canView, async (req, res) => {
   }
 });
 
-router.post("/", canView, async (req, res) => {
-  const { templateId } = req.body;
+router.post("/exercise", canView, async (req, res) => {
+  const {
+    templateExerciseId,
+    templateId,
+    exerciseId,
+    sets,
+    restTime,
+    comments,
+  } = req.body;
 
   try {
-    const method = await templateFunctions.editWorkoutTemplate(templateId);
+    const method = await templateFunctions.editTemplateExercise(
+      templateExerciseId,
+      templateId,
+      exerciseId,
+      sets,
+      restTime,
+      comments
+    );
     res.status(200).json({
       message: `${
         method === "insert" ? "inserted" : "updated"
       } template successfully`,
     });
+  } catch (error) {
+    console.log("err", error);
+    res.status(400).json({ error });
+  }
+});
+
+// deleting template exercise
+router.delete("/exercise/:id", canView, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await templateFunctions.deleteTemplateExercise(id);
+    res.status(200).json({ message: "success" });
   } catch (error) {
     res.status(400).json({ error });
   }

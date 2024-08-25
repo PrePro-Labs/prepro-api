@@ -63,32 +63,47 @@ const templateFunctions = {
     });
   },
 
-  async editWorkoutTemplate(templateId) {
+  async editTemplateExercise(
+    templateExerciseId,
+    templateId,
+    exerciseId,
+    sets,
+    restTime,
+    comments
+  ) {
     return new Promise(async function (resolve, reject) {
       try {
+        console.log("params", {
+          templateExerciseId,
+          templateId,
+          exerciseId,
+          sets,
+          restTime,
+          comments,
+        });
         const pool = await poolPromise;
-        if (!templateId) {
+        if (!templateExerciseId) {
           // insert
           const result = await pool.query(
             `
-            INSERT INTO workoutExercises
-            (workoutId, exerciseId)
-            VALUES (?, ?)
+            INSERT INTO workoutTemplatesExercises
+            (templateId, exerciseId, restTime, comments)
+            VALUES (?, ?, ?, ?)
             `,
-            [workoutId, exerciseId]
+            [templateId, exerciseId, restTime, comments]
           );
 
           // Get the id of the newly inserted row
-          const workoutExerciseId = result[0].insertId;
+          const newId = result[0].insertId;
 
           const setPromises = sets.map((s, i) => {
             return pool.query(
               `
-              INSERT INTO workoutLogSets
-              (workoutExerciseId, orderId, weight, reps)
-              VALUES (?, ?, ?, ?)
+              INSERT INTO workoutTemplatesExercisesSets
+              (templateExerciseId, orderId, reps)
+              VALUES (?, ?, ?)
               `,
-              [workoutExerciseId, i, s.weight, s.reps]
+              [newId, i, s.reps]
             );
           });
 
@@ -96,18 +111,53 @@ const templateFunctions = {
           resolve("insert");
         } else {
           // edit
-          // const result = await pool.query(
-          //   `
-          //   update workoutLog set
-          //   type = ?,
-          //   timeCompleted = ?,
-          //   comments = ?
-          //   where id = ?;
-          //   `,
-          //   [type, timeCompleted, comments, workoutId]
-          // );
+          await pool.query(
+            `
+            UPDATE workoutTemplatesExercises
+            set exerciseId = ?, restTime = ?, comments = ?
+            where id = ? 
+            `,
+            [exerciseId, restTime, comments, templateExerciseId]
+          );
+
+          // delete current sets
+          await pool.query(
+            `
+            delete from workoutTemplatesExercisesSets
+            where templateExerciseId = ?
+            `,
+            [templateExerciseId]
+          );
+
+          const setPromises = sets.map((s, i) => {
+            return pool.query(
+              `
+                insert into workoutTemplatesExercisesSets
+                (templateExerciseId, orderId, reps) values (?, ?, ?)
+                `,
+              [templateExerciseId, i, s.reps]
+            );
+          });
+
+          await Promise.all(setPromises);
           resolve("update");
         }
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  async deleteTemplateExercise(id) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        await pool.query(
+          `
+            delete from workoutTemplatesExercises where id = ?
+            `,
+          [id]
+        );
+        resolve("success");
       } catch (e) {
         reject(e);
       }

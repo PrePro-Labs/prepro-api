@@ -77,7 +77,7 @@ CREATE TABLE exerciseTypes (
 CREATE TABLE workoutLogs (
     id INT PRIMARY KEY AUTO_INCREMENT,
     userId VARCHAR(55), 
-    date DATE NOT NULL, 
+    date VARCHAR(11) NOT NULL, 
     timeCompleted TIME, 
     comments VARCHAR(255),
     type VARCHAR(55),
@@ -110,6 +110,7 @@ CREATE TABLE workoutTemplates (
     id INT PRIMARY KEY AUTO_INCREMENT,
     userId VARCHAR(55),
     name VARCHAR(55),
+    comments VARCHAR(255),
     UNIQUE (userId, name),
     FOREIGN KEY (userId) REFERENCES apiUsers(id) ON DELETE CASCADE
 );
