@@ -66,7 +66,7 @@ const logFunctions = {
     workoutId,
     userId,
     date,
-    type,
+    timeStarted,
     timeCompleted,
     comments
   ) {
@@ -76,22 +76,22 @@ const logFunctions = {
         if (!workoutId) {
           const result = await pool.query(
             `
-            insert into workoutLogs (userId, date, type, timeCompleted, comments)
+            insert into workoutLogs (userId, date, timeStarted, timeCompleted, comments)
             values(?, ?, ?, ?, ?);
             `,
-            [userId, date, type, timeCompleted, comments]
+            [userId, date, timeStarted, timeCompleted, comments]
           );
           resolve("insert");
         } else {
           const result = await pool.query(
             `
             update workoutLogs set
-            type = ?,
+            timeStarted = ?,
             timeCompleted = ?,
             comments = ?
             where id = ?;
             `,
-            [type, timeCompleted, comments, workoutId]
+            [timeStarted, timeCompleted, comments, workoutId]
           );
           resolve("update");
         }
@@ -146,12 +146,12 @@ const logFunctions = {
           // const result = await pool.query(
           //   `
           //   update workoutLog set
-          //   type = ?,
+          //   timeStarted = ?,
           //   timeCompleted = ?,
           //   comments = ?
           //   where id = ?;
           //   `,
-          //   [type, timeCompleted, comments, workoutId]
+          //   [timeStarted, timeCompleted, comments, workoutId]
           // );
           resolve("update");
         }

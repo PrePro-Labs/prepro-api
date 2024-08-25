@@ -17,14 +17,14 @@ router.get("/", canView, async (req, res) => {
 // updating workout summary
 router.post("/summary", canView, async (req, res) => {
   const userId = req.user.id;
-  const { workoutId, date, type, timeCompleted, comments } = req.body;
+  const { workoutId, date, timeStarted, timeCompleted, comments } = req.body;
 
   try {
     const method = await logFunctions.editWorkoutSummary(
       workoutId,
       userId,
       date,
-      type,
+      timeStarted,
       timeCompleted,
       comments
     );
