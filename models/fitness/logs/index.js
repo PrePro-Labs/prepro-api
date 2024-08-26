@@ -164,9 +164,9 @@ const logFunctions = {
               return pool.query(
                 `
                 insert into workoutLogsExercisesSets
-                (workoutExerciseId, orderId, reps) values (?, ?, ?)
+                (workoutExerciseId, orderId, reps, weight) values (?, ?, ?, ?)
                 `,
-                [id, i, s.reps]
+                [id, i, s.reps, s.weight]
               );
             });
 
