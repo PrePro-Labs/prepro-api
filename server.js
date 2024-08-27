@@ -16,20 +16,13 @@ module.exports = app;
 require("./config/passport.js")(passport);
 
 app.use(
-  // removing redis for now
-  // session({
-  //   store: new RedisStore({
-  //     host: process.env.REDIS_HOST,
-  //     port: process.env.REDIS_PORT,
-  //     pass: process.env.REDIS_SECRET,
-  //   }),
-  //   secret: process.env.REDIS_SECRET,
-  //   resave: false,
-  //   saveUninitialized: true,
-  //   cookie: { secure: "auto" },
-  // })
   session({
-    secret: process.env.SESSION_SECRET,
+    store: new RedisStore({
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
+      pass: process.env.REDIS_SECRET,
+    }),
+    secret: process.env.REDIS_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: "auto" },
