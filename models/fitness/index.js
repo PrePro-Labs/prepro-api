@@ -21,42 +21,14 @@ const fitnessFunctions = {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
-        const result1 = await pool.query(
+        await pool.query(
           `
                 delete from exerciseTypes
                 where id = ?
                 `,
           [id]
         );
-        const [affectedLogs] = await pool.query(
-          `
-          SELECT id FROM workoutLogsExercises
-          WHERE exerciseId = ?
-          `,
-          [id]
-        );
 
-        if (affectedLogs.length > 0) {
-          const workoutExerciseIds = affectedLogs.map((log) => log.id);
-
-          // Delete workout log sets for affected exercises
-          await pool.query(
-            `
-            DELETE FROM workoutLogsExercisesSets
-            WHERE workoutExerciseId IN (?)
-            `,
-            [workoutExerciseIds]
-          );
-
-          // Delete workout exercises
-          await pool.query(
-            `
-            DELETE FROM workoutLogsExercises
-            WHERE id IN (?)
-            `,
-            [workoutExerciseIds]
-          );
-        }
         resolve("success");
       } catch (e) {
         reject(e);
