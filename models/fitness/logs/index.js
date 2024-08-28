@@ -74,7 +74,7 @@ const logFunctions = {
       try {
         const pool = await poolPromise;
         if (!workoutId) {
-          const result = await pool.query(
+          await pool.query(
             `
             insert into workoutLogs (userId, date, timeStarted, timeCompleted, comments)
             values(?, ?, ?, ?, ?);
@@ -83,7 +83,7 @@ const logFunctions = {
           );
           resolve("insert");
         } else {
-          const result = await pool.query(
+          await pool.query(
             `
             update workoutLogs set
             timeStarted = ?,

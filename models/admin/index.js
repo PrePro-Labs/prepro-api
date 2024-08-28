@@ -103,7 +103,7 @@ const adminFunctions = {
         }
         const newVersion = latestVersion.join(".");
         const newId = parseInt(result[0].id) + 1;
-        const [result2] = await pool.query(
+        await pool.query(
           `
           insert into builds (version, ranBy, date)
           values (?, ?, now())
@@ -121,7 +121,7 @@ const adminFunctions = {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
-        const [result] = await pool.query(
+        await pool.query(
           `
             insert into buildChanges (buildId, appId, textId, text, type)
             values (?, ?, ?, ?, ?)
@@ -139,7 +139,7 @@ const adminFunctions = {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
-        const [result] = await pool.query(
+        await pool.query(
           `
           insert into buildUserStatus (buildId, userId, seen)
           values (?, ?, 0)

@@ -5,7 +5,7 @@ const dashboardFunctions = {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
-        const [result] = await pool.query(
+        await pool.query(
           `
             update buildUserStatus set seen = 1
             where versionId = ? and userId = ?
