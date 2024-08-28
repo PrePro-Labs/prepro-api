@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const fitnessFunctions = require("../../models/fitness");
+const logFunctions = require("../../models/fitness/logs");
+const templateFunctions = require("../../models/fitness/templates");
 const canAccess = require("../../models/middleware/canAccess");
 
 const canView = canAccess(3);
@@ -30,9 +32,28 @@ router.post("/exercises/types", canView, async (req, res) => {
   const { name, target } = req.body;
 
   try {
-    const method = await fitnessFunctions.addExerciseType(name, target);
+    await fitnessFunctions.addExerciseType(name, target);
     res.status(200).json({
       message: "Added exercise type successfully",
+    });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.post("/exercise/order", canView, async (req, res) => {
+  const { direction, exercise } = req.body;
+
+  try {
+    if (exercise.workoutId) {
+      await logFunctions.changeExercisePosition(direction, exercise);
+    }
+    if (exercise.templateId) {
+      await templateFunctions.changeExercisePosition(direction, exercise);
+    }
+
+    res.status(200).json({
+      message: "Changed exercise order successfully",
     });
   } catch (error) {
     res.status(400).json({ error });

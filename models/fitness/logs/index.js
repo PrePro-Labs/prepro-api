@@ -272,6 +272,59 @@ const logFunctions = {
       }
     });
   },
+  async changeExercisePosition(direction, exercise) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+
+        const [allExercises] = await pool.query(
+          `
+          select * from workoutLogsExercises
+          where workoutId = ?
+          `,
+          [exercise.workoutId]
+        );
+
+        function findIndex(array, target) {
+          for (let i = 0; i < array.length; i++) {
+            if (array[i].orderId === target) {
+              return i;
+            }
+          }
+          return -1;
+        }
+
+        const sorted = allExercises.sort((a, b) => a.orderId - b.orderId);
+        const nextExercise =
+          sorted[
+            findIndex(sorted, exercise.orderId) + (direction === "up" ? 1 : -1)
+          ];
+
+        if (!nextExercise) reject("Exercise is already in first/last position");
+
+        // set curr to next
+        await pool.query(
+          `
+          update workoutLogsExercises set orderId = ?
+          where id = ?;
+          `,
+          [nextExercise.orderId, exercise.id]
+        );
+
+        // set next to curr
+        await pool.query(
+          `
+            update workoutLogsExercises set orderId = ?
+            where id = ?;
+            `,
+          [exercise.orderId, nextExercise.id]
+        );
+        resolve();
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
 };
 
 module.exports = logFunctions;
