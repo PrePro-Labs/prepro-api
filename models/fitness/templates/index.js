@@ -76,13 +76,25 @@ const templateFunctions = {
         const pool = await poolPromise;
         if (!id) {
           // insert
+          const [maxOrderId] = await pool.query(
+            `
+            SELECT MAX(orderId) as maxOrderId
+            FROM workoutTemplatesExercises
+            WHERE templateId = ?
+            `,
+            [templateId]
+          );
+
+          const maxId = maxOrderId[0].maxOrderId || 0;
+          const orderId = maxId + 1;
+
           const result = await pool.query(
             `
             INSERT INTO workoutTemplatesExercises
-            (templateId, exerciseId, restTime, comments)
-            VALUES (?, ?, ?, ?)
+            (templateId, exerciseId, restTime, comments, orderId)
+            VALUES (?, ?, ?, ?, ?)
             `,
-            [templateId, exerciseId, restTime, comments]
+            [templateId, exerciseId, restTime, comments, orderId]
           );
 
           // Get the id of the newly inserted row
@@ -167,9 +179,9 @@ const templateFunctions = {
         const [allExercises] = await pool.query(
           `
           select * from workoutTemplatesExercises
-          where workoutId = ?
+          where templateId = ?
           `,
-          [exercise.workoutId]
+          [exercise.templateId]
         );
 
         function findIndex(array, target) {
@@ -184,7 +196,7 @@ const templateFunctions = {
         const sorted = allExercises.sort((a, b) => a.orderId - b.orderId);
         const nextExercise =
           sorted[
-            findIndex(sorted, exercise.orderId) + (direction === "up" ? 1 : -1)
+            findIndex(sorted, exercise.orderId) + (direction === "up" ? -1 : 1)
           ];
 
         if (!nextExercise) reject("Exercise is already in first/last position");

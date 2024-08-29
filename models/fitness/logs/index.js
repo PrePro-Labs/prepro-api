@@ -74,6 +74,7 @@ const logFunctions = {
       try {
         const pool = await poolPromise;
         if (!workoutId) {
+          // insert
           await pool.query(
             `
             insert into workoutLogs (userId, date, timeStarted, timeCompleted, comments)
@@ -83,6 +84,7 @@ const logFunctions = {
           );
           resolve("insert");
         } else {
+          // edit
           await pool.query(
             `
             update workoutLogs set
@@ -113,13 +115,25 @@ const logFunctions = {
         const pool = await poolPromise;
         if (!id) {
           // insert
+          const [maxOrderId] = await pool.query(
+            `
+            SELECT MAX(orderId) as maxOrderId
+            FROM workoutLogsExercises
+            WHERE workoutId = ?
+            `,
+            [workoutId]
+          );
+
+          const maxId = maxOrderId[0].maxOrderId || 0;
+          const orderId = maxId + 1;
+
           const result = await pool.query(
             `
             INSERT INTO workoutLogsExercises
-            (workoutId, exerciseId, restTime, comments)
-            VALUES (?, ?, ?, ?)
+            (workoutId, exerciseId, restTime, comments, orderId)
+            VALUES (?, ?, ?, ?, ?)
             `,
-            [workoutId, exerciseId, restTime, comments]
+            [workoutId, exerciseId, restTime, comments, orderId]
           );
 
           // Get the id of the newly inserted row
@@ -297,7 +311,7 @@ const logFunctions = {
         const sorted = allExercises.sort((a, b) => a.orderId - b.orderId);
         const nextExercise =
           sorted[
-            findIndex(sorted, exercise.orderId) + (direction === "up" ? 1 : -1)
+            findIndex(sorted, exercise.orderId) + (direction === "up" ? -1 : 1)
           ];
 
         if (!nextExercise) reject("Exercise is already in first/last position");
