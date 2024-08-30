@@ -243,10 +243,10 @@ const logFunctions = {
           const [result] = await pool.query(
             `
             INSERT INTO workoutLogsExercises
-            (workoutId, exerciseId, restTime, comments)
-            VALUES (?, ?, ?, ?)
+            (workoutId, exerciseId, restTime, comments, orderId)
+            VALUES (?, ?, ?, ?, ?)
             `,
-            [workoutId, e.exerciseId, e.restTime, e.comments]
+            [workoutId, e.exerciseId, e.restTime, e.comments, e.orderId]
           );
 
           // Get the inserted workoutLogsExerciseId
