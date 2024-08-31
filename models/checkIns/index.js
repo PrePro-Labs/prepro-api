@@ -8,7 +8,7 @@ const checkInFunctions = {
         // get checkIns
         const [checkIns] = await pool.query(
           `
-            select * from checkIns
+            select date, id from checkIns
             where userId = ?
             `,
           [userId]
