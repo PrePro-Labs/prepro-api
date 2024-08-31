@@ -14,4 +14,13 @@ router.get("/", canView, async (req, res) => {
   }
 });
 
+router.get("/templates", canView, async (req, res) => {
+  try {
+    const result = await checkInFunctions.getCheckInsTemplates();
+    res.status(200).json({ result });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
 module.exports = router;

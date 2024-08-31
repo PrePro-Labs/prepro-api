@@ -17,7 +17,7 @@ const checkInFunctions = {
         // get questions/answers
         const [questions] = await pool.query(
           `
-            select ans.*, qst.question
+            select ans.*, qst.question, qst.type, qst.fullWidth, qst.textArea
             from checkInsQuestionsAnswers ans
             left join checkInsQuestions qst
               on ans.questionId = qst.id
@@ -40,6 +40,44 @@ const checkInFunctions = {
           return retArr;
         }, []);
         resolve(checkInObjs);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  async getCheckInsTemplates() {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        // get templates
+        const [templates] = await pool.query(
+          `
+            select id, name, isDefault from checkInsTemplates
+            `
+        );
+
+        // get questions
+        const [questions] = await pool.query(
+          `
+            select tmp.*, qst.question, qst.type, qst.fullWidth, qst.textArea
+            from checkInsTemplatesQuestions tmp
+            left join checkInsQuestions qst
+              on tmp.questionId = qst.id
+            `
+        );
+
+        const templateObjs = templates.reduce((acc, val) => {
+          const retArr = [...acc];
+
+          const matchingQuestions = questions.filter(
+            (q) => q.templateId === val.id
+          );
+
+          retArr.push({ ...val, questions: matchingQuestions });
+
+          return retArr;
+        }, []);
+        resolve(templateObjs);
       } catch (e) {
         reject(e);
       }
