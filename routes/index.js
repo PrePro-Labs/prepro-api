@@ -6,6 +6,7 @@ module.exports = function (app, passport) {
   app.use("/api/support", require("./support"));
   app.use("/api/logs", require("./logs"));
   app.use("/api/fitness", require("./fitness"));
+  app.use("/api/checkins", require("./checkIns"));
 
   app.get("/failure", function (req, res) {
     res.render("failure.html");
