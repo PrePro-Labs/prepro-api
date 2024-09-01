@@ -83,6 +83,73 @@ const checkInFunctions = {
       }
     });
   },
+  async editCheckIn(date, userId, checkInId, questions) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        if (!checkInId) {
+          //   // insert
+          const result = await pool.query(
+            `
+              insert into checkIns (userId, date)
+              values (?, ?)
+              `,
+            [userId, date]
+          );
+
+          const newId = result[0].insertId;
+
+          const questionPromises = questions.map((q) => {
+            return pool.query(
+              `
+                insert into checkInsQuestionsAnswers
+                (checkInId, questionId, answer, orderId)
+                values (?, ?, ?, ?)
+                `,
+              [newId, q.questionId, q.answer, q.orderId]
+            );
+          });
+
+          await Promise.all(questionPromises);
+          resolve("insert");
+        } else {
+          // edit
+          const questionPromises = questions.map((q) => {
+            return pool.query(
+              `
+                update checkInsQuestionsAnswers
+                set answer = ? where id = ?
+                `,
+              [q.answer, q.id]
+            );
+          });
+
+          await Promise.all(questionPromises);
+          resolve("update");
+        }
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  async deleteCheckIn(id) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        await pool.query(
+          `
+              delete from checkIns 
+              where id = ?
+              `,
+          [id]
+        );
+
+        resolve("success");
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
 };
 
 module.exports = checkInFunctions;

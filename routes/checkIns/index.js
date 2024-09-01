@@ -17,30 +17,30 @@ router.get("/", canView, async (req, res) => {
 
 // update check ins
 router.post("/", canView, async (req, res) => {
-  const userId = req.user.id;
-  // const {
-  //   id: workoutId,
-  //   date,
-  //   timeStarted,
-  //   timeCompleted,
-  //   comments,
-  // } = req.body;
-  console.log(req.body);
-
   try {
-    // const method = await logFunctions.editWorkoutSummary(
-    //   workoutId,
-    //   userId,
-    //   date,
-    //   timeStarted,
-    //   timeCompleted,
-    //   comments
-    // );
-    // res.status(200).json({
-    //   message: `${
-    //     method === "insert" ? "inserted" : "updated"
-    //   } workout successfully`,
-    // });
+    const userId = req.user.id;
+    const { id: checkInId, date, questions } = req.body;
+    const method = await checkInFunctions.editCheckIn(
+      date,
+      userId,
+      checkInId,
+      questions
+    );
+    res.status(200).json({
+      message: `${
+        method === "insert" ? "inserted" : "updated"
+      } check in successfully`,
+    });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+// delete check ins
+router.delete("/checkin/:id", canView, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await checkInFunctions.deleteCheckIn(id);
     res.status(200).json({ message: "success" });
   } catch (error) {
     res.status(400).json({ error });
