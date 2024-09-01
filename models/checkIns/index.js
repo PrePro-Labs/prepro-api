@@ -59,7 +59,7 @@ const checkInFunctions = {
         // get questions
         const [questions] = await pool.query(
           `
-            select tmp.*, qst.question, qst.type, qst.fullWidth, qst.textArea
+            select tmp.templateId, tmp.questionId, tmp.orderId, qst.question, qst.type, qst.fullWidth, qst.textArea
             from checkInsTemplatesQuestions tmp
             left join checkInsQuestions qst
               on tmp.questionId = qst.id
