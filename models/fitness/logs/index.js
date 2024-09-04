@@ -229,6 +229,16 @@ const logFunctions = {
       try {
         const pool = await poolPromise;
 
+        // update workoutLogs to tie to template
+        await pool.query(
+          `
+          update workoutLogs
+          set workoutTemplateId = ?
+          where id = ?
+          `,
+          [templateId, workoutId]
+        );
+
         // Fetch template exercises
         const [templateExercises] = await pool.query(
           `
