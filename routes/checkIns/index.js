@@ -13,6 +13,8 @@ router.post(
   canView,
   async (req, res) => {
     try {
+      const fileUrls = req.files.map((file) => file.location); // returns array of URLS for each of the files
+      console.log(fileUrls);
       res.status(200).json({ message: "success" });
     } catch (error) {
       res.status(400).json({ error });

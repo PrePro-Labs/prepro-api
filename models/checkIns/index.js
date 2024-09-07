@@ -150,6 +150,45 @@ const checkInFunctions = {
       }
     });
   },
+  async deleteCheckIn(id) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        await pool.query(
+          `
+              delete from checkIns 
+              where id = ?
+              `,
+          [id]
+        );
+
+        resolve("success");
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  async addCheckInAttachments(id, filepaths) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+
+        const attachmentPromises = filepaths.map((path) => {
+          return pool.query(
+            `
+            insert into checkInsAttachments (checkInId, s3Url)
+            values (?, ?)
+            `,
+            [id, path]
+          );
+        });
+
+        await Promise.all(attachmentPromises);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
 };
 
 module.exports = checkInFunctions;
