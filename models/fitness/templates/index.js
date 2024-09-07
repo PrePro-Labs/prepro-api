@@ -100,18 +100,16 @@ const templateFunctions = {
           // Get the id of the newly inserted row
           const newId = result[0].insertId;
 
-          const setPromises = sets
-            .filter((s) => s.reps)
-            .map((s, i) => {
-              return pool.query(
-                `
+          const setPromises = sets.map((s, i) => {
+            return pool.query(
+              `
               INSERT INTO workoutTemplatesExercisesSets
               (templateExerciseId, orderId, reps)
               VALUES (?, ?, ?)
               `,
-                [newId, i, s.reps]
-              );
-            });
+              [newId, i, s.reps || null]
+            );
+          });
 
           await Promise.all(setPromises);
           resolve("insert");
@@ -135,17 +133,15 @@ const templateFunctions = {
             [id]
           );
 
-          const setPromises = sets
-            .filter((s) => s.reps)
-            .map((s, i) => {
-              return pool.query(
-                `
+          const setPromises = sets.map((s, i) => {
+            return pool.query(
+              `
                 insert into workoutTemplatesExercisesSets
                 (templateExerciseId, orderId, reps) values (?, ?, ?)
                 `,
-                [id, i, s.reps]
-              );
-            });
+              [id, i, s.reps || null]
+            );
+          });
 
           await Promise.all(setPromises);
           resolve("update");

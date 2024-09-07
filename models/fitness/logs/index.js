@@ -146,7 +146,7 @@ const logFunctions = {
               (workoutExerciseId, orderId, weight, reps)
               VALUES (?, ?, ?, ?)
               `,
-              [workoutExerciseId, i, s.weight, s.reps]
+              [workoutExerciseId, i, s.weight || null, s.reps || null]
             );
           });
 
@@ -172,17 +172,15 @@ const logFunctions = {
             [id]
           );
 
-          const setPromises = sets
-            .filter((s) => s.reps)
-            .map((s, i) => {
-              return pool.query(
-                `
+          const setPromises = sets.map((s, i) => {
+            return pool.query(
+              `
                 insert into workoutLogsExercisesSets
                 (workoutExerciseId, orderId, reps, weight) values (?, ?, ?, ?)
                 `,
-                [id, i, s.reps, s.weight]
-              );
-            });
+              [id, i, s.reps || null, s.weight || null]
+            );
+          });
 
           await Promise.all(setPromises);
           resolve("update");
@@ -279,7 +277,7 @@ const logFunctions = {
               (workoutExerciseId, orderId, reps)
               VALUES (?, ?, ?)
               `,
-              [workoutLogsExerciseId, set.orderId, set.reps]
+              [workoutLogsExerciseId, set.orderId, set.reps || null]
             )
           );
 
