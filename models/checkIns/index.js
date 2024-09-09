@@ -28,6 +28,17 @@ const checkInFunctions = {
           [userId]
         );
 
+        const [photos] = await pool.query(
+          `
+          select att.s3Url, att.checkInId
+          from checkInsAttachments att
+          left join checkIns chk
+            on chk.id = att.checkInId
+          where chk.userId = ?
+          `,
+          userId
+        );
+
         const checkInObjs = checkIns.reduce((acc, val) => {
           const retArr = [...acc];
 
@@ -35,7 +46,13 @@ const checkInFunctions = {
             (q) => q.checkInId === val.id
           );
 
-          retArr.push({ ...val, questions: matchingQuestions });
+          const matchingPhotos = photos.filter((p) => p.checkInId === val.id);
+
+          retArr.push({
+            ...val,
+            questions: matchingQuestions,
+            photos: matchingPhotos,
+          });
 
           return retArr;
         }, []);
@@ -168,7 +185,7 @@ const checkInFunctions = {
       }
     });
   },
-  async addCheckInAttachments(id, filepaths) {
+  async addCheckInAttachments(checkInId, filepaths) {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
@@ -179,11 +196,12 @@ const checkInFunctions = {
             insert into checkInsAttachments (checkInId, s3Url)
             values (?, ?)
             `,
-            [id, path]
+            [checkInId, path]
           );
         });
 
         await Promise.all(attachmentPromises);
+        resolve("success");
       } catch (e) {
         reject(e);
       }
