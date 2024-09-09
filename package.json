@@ -4,6 +4,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.645.0",
+    "@aws-sdk/s3-request-presigner": "^3.645.0",
     "aws-sdk": "^2.1687.0",
     "connect-redis": "^3.4.0",
     "dotenv": "^16.4.5",

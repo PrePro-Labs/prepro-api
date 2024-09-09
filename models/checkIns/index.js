@@ -1,4 +1,5 @@
 const { poolPromise } = require("../../config/database");
+const { getUrl } = require("../../config/awsConfig");
 
 const checkInFunctions = {
   async getCheckIns(userId) {
@@ -28,7 +29,7 @@ const checkInFunctions = {
           [userId]
         );
 
-        const [photos] = await pool.query(
+        const [photoFiles] = await pool.query(
           `
           select att.s3Url, att.checkInId
           from checkInsAttachments att
@@ -37,6 +38,13 @@ const checkInFunctions = {
           where chk.userId = ?
           `,
           userId
+        );
+
+        const photos = await Promise.all(
+          photoFiles.map(async (p) => {
+            const signedUrl = await getUrl("prepro-test-bucket", p.s3Url);
+            return { ...p, signedUrl };
+          })
         );
 
         const checkInObjs = checkIns.reduce((acc, val) => {
