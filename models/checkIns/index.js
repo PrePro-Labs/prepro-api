@@ -31,7 +31,7 @@ const checkInFunctions = {
 
         const [photoFiles] = await pool.query(
           `
-          select att.s3Url, att.checkInId
+          select att.s3Filename, att.checkInId
           from checkInsAttachments att
           left join checkIns chk
             on chk.id = att.checkInId
@@ -42,7 +42,7 @@ const checkInFunctions = {
 
         const photos = await Promise.all(
           photoFiles.map(async (p) => {
-            const signedUrl = await getUrl("prepro-test-bucket", p.s3Url);
+            const signedUrl = await getUrl("prepro-test-bucket", p.s3Filename);
             return { ...p, signedUrl };
           })
         );
@@ -193,18 +193,18 @@ const checkInFunctions = {
       }
     });
   },
-  async addCheckInAttachments(checkInId, filepaths) {
+  async addCheckInAttachments(checkInId, filenames) {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
 
-        const attachmentPromises = filepaths.map((path) => {
+        const attachmentPromises = filenames.map((name) => {
           return pool.query(
             `
-            insert into checkInsAttachments (checkInId, s3Url)
+            insert into checkInsAttachments (checkInId, s3Filename)
             values (?, ?)
             `,
-            [checkInId, path]
+            [checkInId, name]
           );
         });
 

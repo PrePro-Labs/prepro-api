@@ -14,8 +14,8 @@ router.post(
   async (req, res) => {
     try {
       const { checkInId } = req.body;
-      const fileUrls = req.files.map((file) => file.location); // returns array of URLS for each of the files
-      await checkInFunctions.addCheckInAttachments(checkInId, fileUrls);
+      const fileNames = req.files.map((file) => file.key); // returns array of URLS for each of the files
+      await checkInFunctions.addCheckInAttachments(checkInId, fileNames);
 
       res.status(200).json({ message: "success" });
     } catch (error) {
