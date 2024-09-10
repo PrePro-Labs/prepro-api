@@ -28,13 +28,9 @@ router.delete("/attachment/:id", canView, async (req, res) => {
   try {
     const { id } = req.params;
 
-    console.log(id);
-
     const files = await checkInFunctions.getCheckInAttachment(id);
 
     if (!files.length) throw new Error("No files matched to local DB");
-
-    console.log(files[0].s3Filename);
 
     // delete from AWS
     await deleteFile("prepro-test-bucket", files[0].s3Filename);
