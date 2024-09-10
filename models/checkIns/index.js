@@ -31,7 +31,7 @@ const checkInFunctions = {
 
         const [photoFiles] = await pool.query(
           `
-          select att.s3Filename, att.checkInId
+          select att.s3Filename, att.checkInId, att.id
           from checkInsAttachments att
           left join checkIns chk
             on chk.id = att.checkInId
@@ -209,6 +209,43 @@ const checkInFunctions = {
         });
 
         await Promise.all(attachmentPromises);
+        resolve("success");
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+
+  async getCheckInAttachment(id) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        const [result] = await pool.query(
+          `
+          select * from checkInsAttachments
+          where id = ?
+          `,
+          [id]
+        );
+        resolve(result);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+
+  async deleteCheckInAttachment(id) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        await pool.query(
+          `
+              delete from checkInsAttachments
+              where id = ?
+              `,
+          [id]
+        );
+
         resolve("success");
       } catch (e) {
         reject(e);

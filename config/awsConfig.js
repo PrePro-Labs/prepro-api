@@ -2,7 +2,11 @@ const path = require("path");
 const dotenv = require("dotenv");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
-const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3"); // can uninstall aws-sdk
+const {
+  S3Client,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3"); // can uninstall aws-sdk
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 dotenv.config({
@@ -51,11 +55,11 @@ function upload(bucket) {
   });
 }
 
-async function getUrl(bucket, fileName) {
+async function getUrl(bucket, filename) {
   try {
     const command = new GetObjectCommand({
       Bucket: bucket,
-      Key: fileName,
+      Key: filename,
     });
 
     // Generate the presigned URL
@@ -67,4 +71,19 @@ async function getUrl(bucket, fileName) {
   }
 }
 
-module.exports = { upload, getBuckets, getUrl };
+async function deleteFile(bucket, filename) {
+  try {
+    const command = new DeleteObjectCommand({
+      Bucket: bucket,
+      Key: filename,
+    });
+
+    const response = await s3.send(command);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+module.exports = { upload, getBuckets, getUrl, deleteFile };

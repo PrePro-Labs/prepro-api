@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const checkInFunctions = require("../../models/checkIns");
 const canAccess = require("../../models/middleware/canAccess");
-const { upload } = require("../../config/awsConfig");
+const { upload, deleteFile } = require("../../config/awsConfig");
 const uploadFile = upload("prepro-test-bucket");
 
 const canView = canAccess(5);
@@ -23,6 +23,29 @@ router.post(
     }
   }
 );
+
+router.delete("/attachment/:id", canView, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log(id);
+
+    const files = await checkInFunctions.getCheckInAttachment(id);
+
+    if (!files.length) throw new Error("No files matched to local DB");
+
+    console.log(files[0].s3Filename);
+
+    // delete from AWS
+    await deleteFile("prepro-test-bucket", files[0].s3Filename);
+
+    // delete from local db
+    await checkInFunctions.deleteCheckInAttachment(id);
+    res.status(200).json({ message: "success" });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
 
 // get check ins
 router.get("/", canView, async (req, res) => {
