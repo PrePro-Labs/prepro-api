@@ -42,7 +42,7 @@ const checkInFunctions = {
 
         const photos = await Promise.all(
           photoFiles.map(async (p) => {
-            const signedUrl = await getUrl("prepro-test-bucket", p.s3Filename);
+            const signedUrl = await getUrl("checkin-photos", p.s3Filename);
             return { ...p, signedUrl };
           })
         );
@@ -192,7 +192,7 @@ const checkInFunctions = {
         // delete attachments from s3
         if (attachments.length) {
           const attachmentPromises = attachments.map(async (a) => {
-            return await deleteFile("prepro-test-bucket", a.s3Filename);
+            return await deleteFile("checkin-photos", a.s3Filename);
           });
 
           await Promise.all(attachmentPromises);

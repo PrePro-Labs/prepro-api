@@ -2,7 +2,7 @@ const router = require("express").Router();
 const checkInFunctions = require("../../models/checkIns");
 const canAccess = require("../../models/middleware/canAccess");
 const { upload, deleteFile } = require("../../config/awsConfig");
-const uploadFile = upload("prepro-test-bucket");
+const uploadFile = upload("checkin-photos");
 
 const canView = canAccess(5);
 
@@ -33,7 +33,7 @@ router.delete("/attachment/:id", canView, async (req, res) => {
     if (!files.length) throw new Error("No files matched to local DB");
 
     // delete from AWS
-    await deleteFile("prepro-test-bucket", files[0].s3Filename);
+    await deleteFile("checkin-photos", files[0].s3Filename);
 
     // delete from local db
     await checkInFunctions.deleteCheckInAttachment(id);
