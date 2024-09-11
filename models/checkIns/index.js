@@ -1,5 +1,5 @@
 const { poolPromise } = require("../../config/database");
-const { getUrl } = require("../../config/awsConfig");
+const { getUrl, deleteFile } = require("../../config/awsConfig");
 
 const checkInFunctions = {
   async getCheckIns(userId) {
@@ -179,6 +179,26 @@ const checkInFunctions = {
     return new Promise(async function (resolve, reject) {
       try {
         const pool = await poolPromise;
+        // get attachments for s3
+        const [attachments] = await pool.query(
+          `
+          select s3Filename
+          from checkInsAttachments
+          where checkInId = ?
+          `,
+          [id]
+        );
+
+        // delete attachments from s3
+        if (attachments.length) {
+          const attachmentPromises = attachments.map(async (a) => {
+            return await deleteFile("prepro-test-bucket", a.s3Filename);
+          });
+
+          await Promise.all(attachmentPromises);
+        }
+
+        // delete checkin data from db
         await pool.query(
           `
               delete from checkIns 
