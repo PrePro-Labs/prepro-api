@@ -10,9 +10,10 @@ dotenv.config({ path: path.join(__dirname, "../secrets.env") });
  * @param {string} subject The subject line of the email.
  * @param {string} body The main content of the email.
  * @param {string} bcc Who to include in the BCC of the email.
+ * @param {string} [attachmentPath] Optional path to an attachment.
  * @returns
  */
-function sendEmail(to, cc, bcc, subject, body) {
+function sendEmail(to, cc, bcc, subject, body, attachmentPath) {
   return new Promise(async function (resolve, reject) {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -34,6 +35,15 @@ function sendEmail(to, cc, bcc, subject, body) {
   Test.. bcc: ${bcc}
   ${body}`
           : body,
+      attachments: attachmentPath
+        ? [
+            {
+              filename: path.basename(attachmentPath),
+              path: attachmentPath,
+              contentType: "application/pdf",
+            },
+          ]
+        : [],
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
