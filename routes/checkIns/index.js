@@ -3,6 +3,11 @@ const checkInFunctions = require("../../models/checkIns");
 const canAccess = require("../../models/middleware/canAccess");
 const { upload, deleteFile } = require("../../config/awsConfig");
 const uploadFile = upload("checkin-photos");
+const multer = require("multer");
+const { sendEmail } = require("../../config/functions");
+const uploadToLocal = multer({ dest: "temp/" });
+const path = require("path");
+const fs = require("fs");
 
 const canView = canAccess(5);
 
@@ -16,6 +21,32 @@ router.post(
       const { checkInId } = req.body;
       const fileNames = req.files.map((file) => file.key); // returns array of URLS for each of the files
       await checkInFunctions.addCheckInAttachments(checkInId, fileNames);
+
+      res.status(200).json({ message: "success" });
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+  }
+);
+
+// send pdf to coach
+router.post(
+  "/send",
+  canView,
+  uploadToLocal.single("file"),
+  async (req, res) => {
+    try {
+      const { filename } = req.body;
+      await sendEmail(
+        "john.gaynor@irvmat.com",
+        "",
+        "",
+        filename,
+        "",
+        path.join(__dirname, "../../", req.file.path)
+      );
+
+      fs.unlinkSync(path.join(__dirname, "../../", req.file.path));
 
       res.status(200).json({ message: "success" });
     } catch (error) {
