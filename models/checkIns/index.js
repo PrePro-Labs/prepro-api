@@ -70,6 +70,23 @@ const checkInFunctions = {
       }
     });
   },
+  async getDailyLogs(id) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        const [result] = await pool.query(
+          `
+          select * from userLogsExternal
+          where userId = ?
+          `,
+          [id]
+        );
+        resolve(result);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
   async getCheckInsTemplates() {
     return new Promise(async function (resolve, reject) {
       try {
