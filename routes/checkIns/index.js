@@ -38,8 +38,8 @@ router.post(
     try {
       const { filename } = req.body;
       await sendEmail(
-        "john.gaynor@irvmat.com",
-        "",
+        "wbeuliss@gmail.com",
+        "jgaynr@icloud.com",
         "",
         filename,
         "",
