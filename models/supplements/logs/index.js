@@ -47,6 +47,41 @@ const logFunctions = {
       }
     });
   },
+  async getMissedSupplements(userId) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        const [result] = await pool.query(
+          `
+            select * from supplementLogsMissed
+            where userId = ?
+            `,
+          [userId]
+        );
+        resolve(result);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  async addMissedSupplement(userId, item, date, reason) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        await pool.query(
+          `
+            insert into supplementLogsMissed
+            (userId, supplementId, date, reason)
+            values (?, ?, ?, ?)
+            `,
+          [userId, item.id, date, reason]
+        );
+        resolve();
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
 };
 
 module.exports = logFunctions;
