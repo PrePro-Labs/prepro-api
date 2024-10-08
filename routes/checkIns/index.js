@@ -149,4 +149,18 @@ router.get("/commentary/:id", canView, async (req, res) => {
   }
 });
 
+// add comment
+router.post("/commentary", canView, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { checkInId, comment } = req.body;
+    await checkInFunctions.addCheckInComment(checkInId, userId, comment);
+    res.status(200).json({
+      message: "success",
+    });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
 module.exports = router;

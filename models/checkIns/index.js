@@ -307,6 +307,26 @@ const checkInFunctions = {
       }
     });
   },
+
+  async addCheckInComment(checkInId, userId, comment) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+
+        await pool.query(
+          `
+            insert into checkInsCommentary (checkInId, userId, comment, date)
+            values (?, ?, ?, now())
+            `,
+          [checkInId, userId, comment]
+        );
+
+        resolve("success");
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
 };
 
 module.exports = checkInFunctions;
