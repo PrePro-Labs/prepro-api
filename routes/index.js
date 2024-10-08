@@ -1,4 +1,5 @@
 const config = require("../config");
+const adminFunctions = require("../models/admin");
 
 module.exports = function (app, passport) {
   app.use("/api/dashboard", require("./dashboard"));
@@ -47,5 +48,14 @@ module.exports = function (app, passport) {
       }
       res.redirect("/");
     });
+  });
+
+  app.get("/api/users", async (req, res) => {
+    try {
+      const result = await adminFunctions.getUsers();
+      res.status(200).json({ result });
+    } catch (error) {
+      res.status(400).json({ error });
+    }
   });
 };

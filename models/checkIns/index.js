@@ -289,6 +289,24 @@ const checkInFunctions = {
       }
     });
   },
+
+  async getCheckInCommentary(id) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        const [result] = await pool.query(
+          `
+          select * from checkInsCommentary
+          where checkInId = ?
+          `,
+          [id]
+        );
+        resolve(result);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
 };
 
 module.exports = checkInFunctions;

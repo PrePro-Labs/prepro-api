@@ -22,15 +22,6 @@ router.get("/access", canView, async (req, res) => {
   }
 });
 
-router.get("/users", canView, async (req, res) => {
-  try {
-    const result = await adminFunctions.getUsers();
-    res.status(200).json({ result });
-  } catch (error) {
-    res.status(400).json({ error });
-  }
-});
-
 router.post("/access/delete", canView, async (req, res) => {
   const { userId, appId } = req.body;
   try {
