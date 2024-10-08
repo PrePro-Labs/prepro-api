@@ -31,7 +31,7 @@ const checkInFunctions = {
 
         const [photoFiles] = await pool.query(
           `
-          select att.s3Filename, att.checkInId, att.id
+          select att.s3Filename, att.checkInId, att.id, att.poseId
           from checkInsAttachments att
           left join checkIns chk
             on chk.id = att.checkInId
