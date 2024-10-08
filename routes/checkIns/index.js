@@ -36,7 +36,9 @@ router.post(
   uploadToLocal.single("file"),
   async (req, res) => {
     try {
-      const { filename } = req.body;
+      const { filename, checkInId } = req.body;
+      const userId = req.user.id;
+
       await sendEmail(
         "wbeuliss@gmail.com",
         "jgaynr@icloud.com",
@@ -47,6 +49,11 @@ router.post(
       );
 
       fs.unlinkSync(path.join(__dirname, "../../", req.file.path));
+      await checkInFunctions.addCheckInComment(
+        checkInId,
+        userId,
+        "Sent PDF to coach"
+      );
 
       res.status(200).json({ message: "success" });
     } catch (error) {
