@@ -128,7 +128,7 @@ router.post("/", canView, async (req, res) => {
 router.delete("/checkin/:id", canView, async (req, res) => {
   try {
     const id = req.params.id;
-    const result = await checkInFunctions.deleteCheckIn(id);
+    await checkInFunctions.deleteCheckIn(id);
     res.status(200).json({ message: "success" });
   } catch (error) {
     res.status(400).json({ error });
