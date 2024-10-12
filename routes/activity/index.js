@@ -8,7 +8,7 @@ router.get("/", canView, async (req, res) => {
   try {
     const userId = req.user.id;
     const result = await activityFunctions.getActivity(userId);
-    res.status(200).json({ result });
+    res.status(200).json(result);
   } catch (error) {
     res.status(400).json({ error });
   }
