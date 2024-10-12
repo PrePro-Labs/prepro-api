@@ -107,13 +107,9 @@ router.get("/daily", canView, async (req, res) => {
 router.post("/", canView, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { id: checkInId, date, questions } = req.body;
-    const method = await checkInFunctions.editCheckIn(
-      date,
-      userId,
-      checkInId,
-      questions
-    );
+    console.log("submitting", req.body);
+    const values = req.body;
+    const method = await checkInFunctions.editCheckIn(userId, values);
     res.status(200).json({
       message: `${
         method === "insert" ? "inserted" : "updated"
@@ -130,16 +126,6 @@ router.delete("/checkin/:id", canView, async (req, res) => {
     const id = req.params.id;
     await checkInFunctions.deleteCheckIn(id);
     res.status(200).json({ message: "success" });
-  } catch (error) {
-    res.status(400).json({ error });
-  }
-});
-
-// get templates
-router.get("/templates", canView, async (req, res) => {
-  try {
-    const result = await checkInFunctions.getCheckInsTemplates();
-    res.status(200).json({ result });
   } catch (error) {
     res.status(400).json({ error });
   }
