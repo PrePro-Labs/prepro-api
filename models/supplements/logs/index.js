@@ -35,8 +35,8 @@ const logFunctions = {
         } else {
           await pool.query(
             `
-            insert into supplementLogs (userId, supplementId, date)
-            values (?, ?, ?)
+            insert into supplementLogs (userId, supplementId, date, completed)
+            values (?, ?, ?, 1)
             `,
             [userId, item.id, date]
           );
@@ -70,9 +70,9 @@ const logFunctions = {
         const pool = await poolPromise;
         await pool.query(
           `
-            insert into supplementLogsMissed
-            (userId, supplementId, date, reason)
-            values (?, ?, ?, ?)
+            insert into supplementLogs
+            (userId, supplementId, date, completed, reason)
+            values (?, ?, ?, 0, ?)
             `,
           [userId, item.id, date, reason]
         );

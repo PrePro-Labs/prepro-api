@@ -7,10 +7,10 @@ const canView = canAccess(7);
 router.use("/logs", require("./logs"));
 // router.use('/admin', require('./admin'));
 
-router.get("/items", canView, async (req, res) => {
+router.get("/", canView, async (req, res) => {
   try {
     const result = await supplementFunctions.getSupplementItems();
-    res.status(200).json({ result });
+    res.status(200).json(result);
   } catch (error) {
     res.status(400).json({ error });
   }

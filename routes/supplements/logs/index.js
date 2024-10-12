@@ -8,7 +8,7 @@ router.get("/", canView, async (req, res) => {
   try {
     const userId = req.user.id;
     const result = await logFunctions.getSupplementLogs(userId);
-    res.status(200).json({ result });
+    res.status(200).json(result);
   } catch (error) {
     res.status(400).json({ error });
   }
@@ -21,16 +21,6 @@ router.post("/", canView, async (req, res) => {
 
     await logFunctions.editSupplementLog(userId, item, date);
     res.status(200).json({ msg: "success" });
-  } catch (error) {
-    res.status(400).json({ error });
-  }
-});
-
-router.get("/missed", canView, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const result = await logFunctions.getMissedSupplements(userId);
-    res.status(200).json({ result });
   } catch (error) {
     res.status(400).json({ error });
   }
