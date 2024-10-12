@@ -224,23 +224,6 @@ const checkInFunctions = {
       }
     });
   },
-
-  async changePose(photoId, poseId) {
-    return new Promise(async function (resolve, reject) {
-      try {
-        const pool = await poolPromise;
-        const [result] = await pool.query(
-          `
-          update checkInsAttachments set poseId = ? where id = ?
-          `,
-          [poseId === "" ? null : poseId, photoId]
-        );
-        resolve(result);
-      } catch (e) {
-        reject(e);
-      }
-    });
-  },
 };
 
 module.exports = checkInFunctions;

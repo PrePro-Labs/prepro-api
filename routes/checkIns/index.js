@@ -136,17 +136,4 @@ router.post("/commentary", canView, async (req, res) => {
   }
 });
 
-// change pose
-router.post("/pose", canView, async (req, res) => {
-  try {
-    const { photoId, poseId } = req.body;
-    await checkInFunctions.changePose(photoId, poseId);
-    res.status(200).json({
-      message: "success",
-    });
-  } catch (error) {
-    res.status(400).json({ error });
-  }
-});
-
 module.exports = router;
