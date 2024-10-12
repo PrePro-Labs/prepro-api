@@ -156,16 +156,6 @@ router.post("/commentary", canView, async (req, res) => {
   }
 });
 
-// get check ins
-router.get("/poses", canView, async (req, res) => {
-  try {
-    const result = await checkInFunctions.getPoses();
-    res.status(200).json({ result });
-  } catch (error) {
-    res.status(400).json({ error });
-  }
-});
-
 // change pose
 router.post("/pose", canView, async (req, res) => {
   try {
