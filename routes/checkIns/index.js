@@ -1,8 +1,7 @@
 const router = require("express").Router();
 const checkInFunctions = require("../../models/checkIns");
 const canAccess = require("../../models/middleware/canAccess");
-const { upload, deleteFile } = require("../../config/awsConfig");
-const uploadFile = upload("checkin-photos");
+const { deleteFile } = require("../../config/awsConfig");
 const multer = require("multer");
 const { sendEmail } = require("../../config/functions");
 const uploadToLocal = multer({ dest: "temp/" });
@@ -10,24 +9,6 @@ const path = require("path");
 const fs = require("fs");
 
 const canView = canAccess(5);
-
-// add attachments
-router.post(
-  "/attachments",
-  uploadFile.array("images", 20),
-  canView,
-  async (req, res) => {
-    try {
-      const { checkInId } = req.body;
-      const fileNames = req.files.map((file) => file.key); // returns array of URLS for each of the files
-      await checkInFunctions.addCheckInAttachments(checkInId, fileNames);
-
-      res.status(200).json({ message: "success" });
-    } catch (error) {
-      res.status(400).json({ error });
-    }
-  }
-);
 
 // send pdf to coach
 router.post(
@@ -107,7 +88,6 @@ router.get("/daily", canView, async (req, res) => {
 router.post("/", canView, async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log("submitting", req.body);
     const values = req.body;
     const method = await checkInFunctions.editCheckIn(userId, values);
     res.status(200).json({
