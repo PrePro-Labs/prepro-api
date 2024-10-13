@@ -11,6 +11,7 @@ module.exports = function (app, passport) {
   app.use("/api/activity", require("./activity"));
   app.use("/api/supplements", require("./supplements"));
   app.use("/api/physique", require("./physique"));
+  app.use("/api/nutrition", require("./nutrition"));
 
   app.get("/failure", function (req, res) {
     res.render("failure.html");

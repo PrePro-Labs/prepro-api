@@ -73,17 +73,6 @@ router.get("/", canView, async (req, res) => {
   }
 });
 
-// get daily check ins
-router.get("/daily", canView, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const result = await checkInFunctions.getDailyLogs(userId);
-    res.status(200).json({ result });
-  } catch (error) {
-    res.status(400).json({ error });
-  }
-});
-
 // update check ins
 router.post("/", canView, async (req, res) => {
   try {
