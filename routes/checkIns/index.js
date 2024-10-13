@@ -10,6 +10,33 @@ const fs = require("fs");
 
 const canView = canAccess(5);
 
+// get check ins
+router.get("/", canView, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const result = await checkInFunctions.getCheckIns(userId);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
+// update check ins
+router.post("/", canView, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const values = req.body;
+    const method = await checkInFunctions.editCheckIn(userId, values);
+    res.status(200).json({
+      message: `${
+        method === "insert" ? "inserted" : "updated"
+      } check in successfully`,
+    });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
 // send pdf to coach
 router.post(
   "/send",
@@ -36,9 +63,9 @@ router.post(
         "Sent PDF to coach"
       );
 
-      res.status(200).json({ message: "success" });
+      res.status(200).json("success");
     } catch (error) {
-      res.status(400).json({ error });
+      res.status(400).json(error);
     }
   }
 );
@@ -56,36 +83,9 @@ router.delete("/attachment/:id", canView, async (req, res) => {
 
     // delete from local db
     await checkInFunctions.deleteCheckInAttachment(id);
-    res.status(200).json({ message: "success" });
+    res.status(200).json("success");
   } catch (error) {
-    res.status(400).json({ error });
-  }
-});
-
-// get check ins
-router.get("/", canView, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const result = await checkInFunctions.getCheckIns(userId);
-    res.status(200).json({ result });
-  } catch (error) {
-    res.status(400).json({ error });
-  }
-});
-
-// update check ins
-router.post("/", canView, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const values = req.body;
-    const method = await checkInFunctions.editCheckIn(userId, values);
-    res.status(200).json({
-      message: `${
-        method === "insert" ? "inserted" : "updated"
-      } check in successfully`,
-    });
-  } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
@@ -94,9 +94,9 @@ router.delete("/checkin/:id", canView, async (req, res) => {
   try {
     const id = req.params.id;
     await checkInFunctions.deleteCheckIn(id);
-    res.status(200).json({ message: "success" });
+    res.status(200).json("success");
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
@@ -105,9 +105,9 @@ router.get("/commentary/:id", canView, async (req, res) => {
   try {
     const id = req.params.id;
     const result = await checkInFunctions.getCheckInCommentary(id);
-    res.status(200).json({ result });
+    res.status(200).json(result);
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
@@ -117,11 +117,9 @@ router.post("/commentary", canView, async (req, res) => {
     const userId = req.user.id;
     const { checkInId, comment } = req.body;
     await checkInFunctions.addCheckInComment(checkInId, userId, comment);
-    res.status(200).json({
-      message: "success",
-    });
+    res.status(200).json("success");
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 

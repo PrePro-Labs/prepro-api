@@ -51,7 +51,6 @@ router.post(
 
       res.status(200).json("success");
     } catch (error) {
-      console.log(error);
       res.status(400).json(error);
     }
   }

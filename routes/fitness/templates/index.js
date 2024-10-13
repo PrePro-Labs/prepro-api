@@ -39,7 +39,6 @@ router.post("/exercise", canView, async (req, res) => {
       } template successfully`,
     });
   } catch (error) {
-    console.log("err", error);
     res.status(400).json({ error });
   }
 });
