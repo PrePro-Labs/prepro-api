@@ -7,38 +7,38 @@ const canView = canAccess(1);
 router.get("/apps", canView, async (req, res) => {
   try {
     const result = await adminFunctions.getApps();
-    res.status(200).json({ result });
+    res.status(200).json(result);
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
 router.get("/access", canView, async (req, res) => {
   try {
     const result = await adminFunctions.getAccess();
-    res.status(200).json({ result });
+    res.status(200).json(result);
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
-router.post("/access/delete", canView, async (req, res) => {
-  const { userId, appId } = req.body;
+router.delete("/access/delete/:userId/:appId", canView, async (req, res) => {
+  const { userId, appId } = req.params;
   try {
-    const result = await adminFunctions.deleteAccess(userId, appId);
-    res.status(200).json({ message: "deleted access" });
+    await adminFunctions.deleteAccess(userId, appId);
+    res.status(200).json("deleted access");
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
 router.post("/access/add", canView, async (req, res) => {
   const { userId, appId } = req.body;
   try {
-    const result = await adminFunctions.addAccess(userId, appId);
-    res.status(200).json({ message: "deleted access" });
+    await adminFunctions.addAccess(userId, appId);
+    res.status(200).json("added access");
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
@@ -71,7 +71,7 @@ router.post("/build", canView, async (req, res) => {
 
     res.status(200).json({ versionId });
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 

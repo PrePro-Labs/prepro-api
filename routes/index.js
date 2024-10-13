@@ -19,8 +19,8 @@ module.exports = function (app, passport) {
 
   app.get("/api/auth/user", async function (req, res, next) {
     if (req.user) {
-      res.json({ user: req.user });
-    } else res.json({ user: null });
+      res.json(req.user);
+    } else res.json(null);
   });
 
   app.get(
@@ -55,9 +55,9 @@ module.exports = function (app, passport) {
   app.get("/api/users", async (req, res) => {
     try {
       const result = await adminFunctions.getUsers();
-      res.status(200).json({ result });
+      res.status(200).json(result);
     } catch (error) {
-      res.status(400).json({ error });
+      res.status(400).json(error);
     }
   });
 };

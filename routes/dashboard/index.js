@@ -14,7 +14,7 @@ router.get("/apps", async (req, res) => {
       or app.allUsers = 1
       `);
 
-  res.status(200).json({ result });
+  res.status(200).json(result);
 });
 
 router.get("/changelog", async (req, res) => {
@@ -43,7 +43,7 @@ router.get("/changelog", async (req, res) => {
         cha.appId = acc.appId and 
         usr.seen = 0
       `);
-  res.status(200).json({ result });
+  res.status(200).json(result);
 });
 
 router.post("/changelog", async (req, res) => {
@@ -57,9 +57,9 @@ router.post("/changelog", async (req, res) => {
     });
 
     await Promise.all(poolPromises);
-    res.status(200).json({ message: "successfully updated change log status" });
+    res.status(200).json("successfully updated change log status");
   } catch (error) {
-    res.status(200).json({ error });
+    res.status(200).json(error);
   }
 });
 
