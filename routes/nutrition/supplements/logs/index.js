@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const logFunctions = require("../../../models/supplements/logs");
-const canAccess = require("../../../models/middleware/canAccess");
+const logFunctions = require("../../../../models/nutrition/supplements/logs");
+const canAccess = require("../../../../models/middleware/canAccess");
 
 const canView = canAccess(7);
 

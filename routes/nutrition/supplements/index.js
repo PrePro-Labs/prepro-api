@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const supplementFunctions = require("../../models/supplements");
-const canAccess = require("../../models/middleware/canAccess");
+const supplementFunctions = require("../../../models/nutrition/supplements");
+const canAccess = require("../../../models/middleware/canAccess");
 
 const canView = canAccess(7);
 
@@ -12,7 +12,7 @@ router.get("/", canView, async (req, res) => {
     const result = await supplementFunctions.getSupplementItems();
     res.status(200).json(result);
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
