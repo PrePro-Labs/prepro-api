@@ -8,9 +8,9 @@ router.get("/", canView, async (req, res) => {
   try {
     const userId = req.user.id;
     const result = await logFunctions.getWorkoutLogs(userId);
-    res.status(200).json({ result });
+    res.status(200).json(result);
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
@@ -40,12 +40,12 @@ router.post("/summary", canView, async (req, res) => {
       } workout successfully`,
     });
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
 // updating workout exercises
-router.post("/exercises", canView, async (req, res) => {
+router.post("/exercise", canView, async (req, res) => {
   const {
     parentId: workoutId,
     exerciseId,
@@ -70,7 +70,7 @@ router.post("/exercises", canView, async (req, res) => {
       } workout successfully`,
     });
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
@@ -81,7 +81,7 @@ router.delete("/summary/:id", canView, async (req, res) => {
     const result = await logFunctions.deleteWorkoutSummary(id);
     res.status(200).json({ message: "success" });
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
@@ -92,7 +92,7 @@ router.delete("/exercise/:id", canView, async (req, res) => {
     const result = await logFunctions.deleteWorkoutExercise(id);
     res.status(200).json({ message: "success" });
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
@@ -106,7 +106,7 @@ router.post("/copy", canView, async (req, res) => {
       message: "Copied workout successfully",
     });
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 

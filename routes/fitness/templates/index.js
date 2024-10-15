@@ -8,9 +8,9 @@ router.get("/", canView, async (req, res) => {
   try {
     const userId = req.user.id;
     const result = await templateFunctions.getWorkoutTemplates(userId);
-    res.status(200).json({ result });
+    res.status(200).json(result);
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
@@ -39,7 +39,7 @@ router.post("/exercise", canView, async (req, res) => {
       } template successfully`,
     });
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
@@ -50,7 +50,7 @@ router.delete("/exercise/:id", canView, async (req, res) => {
     const result = await templateFunctions.deleteTemplateExercise(id);
     res.status(200).json({ message: "success" });
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json(error);
   }
 });
 
