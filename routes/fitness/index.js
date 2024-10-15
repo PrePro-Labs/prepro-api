@@ -18,7 +18,7 @@ router.get("/exercises/types", canView, async (req, res) => {
   }
 });
 
-router.delete("/exercises/types/:id", canView, async (req, res) => {
+router.delete("/exercises/type/:id", canView, async (req, res) => {
   try {
     const id = req.params.id;
     const result = await fitnessFunctions.deleteExerciseType(id);
@@ -28,7 +28,7 @@ router.delete("/exercises/types/:id", canView, async (req, res) => {
   }
 });
 
-router.post("/exercises/types", canView, async (req, res) => {
+router.post("/exercises/type", canView, async (req, res) => {
   const { name, target } = req.body;
 
   try {
