@@ -8,11 +8,14 @@ const activityFunctions = {
         // get workouts
         const [workouts] = await pool.query(
           `
-          select log.id, log.date, CONCAT('Workout: ', tmp.name) as title, 'workout' AS type
-          from workoutLogs log
-          left join workoutTemplates tmp
-	          on tmp.id = log.workoutTemplateId
-          where log.userId = ?
+          SELECT 
+            log.id, 
+            log.date, 
+            CONCAT('Workout: ', COALESCE(tmp.name, 'N/A')) AS title, 
+            'workout' AS type
+          FROM workoutLogs log
+          LEFT JOIN workoutTemplates tmp ON tmp.id = log.workoutTemplateId
+          WHERE log.userId = ?
           `,
           [userId]
         );
