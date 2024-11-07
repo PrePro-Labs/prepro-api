@@ -63,4 +63,28 @@ router.post("/changelog", async (req, res) => {
   }
 });
 
+router.get("/favorites", async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const result = await dashboardFunctions.getFavorites(userId);
+
+    const apps = result.map((r) => r.appId);
+    res.status(200).json(apps);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
+router.post("/favorite", async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { appId } = req.body;
+    await dashboardFunctions.updateFavorite(userId, appId);
+
+    res.status(200).json();
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
 module.exports = router;
