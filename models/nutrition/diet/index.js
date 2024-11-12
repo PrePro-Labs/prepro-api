@@ -21,8 +21,17 @@ const dietFunctions = {
   async editDietLog(values) {
     return new Promise(async function (resolve, reject) {
       try {
-        const { id, protein, carbs, fat, cardio, effectiveDate, userId } =
-          values;
+        const {
+          id,
+          protein,
+          carbs,
+          fat,
+          cardio,
+          effectiveDate,
+          userId,
+          cardioMinutes,
+          notes,
+        } = values;
 
         const calories = protein * 4 + carbs * 4 + fat * 9;
 
@@ -32,19 +41,29 @@ const dietFunctions = {
           await pool.query(
             `
               update dietLogs
-              set protein = ?, carbs = ?, fat = ?, calories = ?, cardio = ?
+              set protein = ?, carbs = ?, fat = ?, calories = ?, cardio = ?, cardioMinutes = ?, notes = ?
               where id = ?
               `,
-            [protein, carbs, fat, calories, cardio, id]
+            [protein, carbs, fat, calories, cardio, cardioMinutes, notes, id]
           );
         } else {
           // insert
           await pool.query(
             `
-              insert into dietLogs (userId, protein, carbs, fat, calories, cardio, effectiveDate) 
+              insert into dietLogs (userId, protein, carbs, fat, calories, cardio, effectiveDate, cardioMinutes, notes) 
               values (?, ?, ?, ?, ?, ?, ?)
               `,
-            [userId, protein, carbs, fat, calories, cardio, effectiveDate]
+            [
+              userId,
+              protein,
+              carbs,
+              fat,
+              calories,
+              cardio,
+              effectiveDate,
+              cardioMinutes,
+              notes,
+            ]
           );
         }
         resolve("success");
