@@ -61,7 +61,7 @@ const dietFunctions = {
           await pool.query(
             `
               insert into dietLogs (userId, protein, carbs, fat, calories, cardio, effectiveDate, cardioMinutes, notes) 
-              values (?, ?, ?, ?, ?, ?, ?)
+              values (?, ?, ?, ?, ?, ?, ?, ?, ?)
               `,
             [
               userId,
