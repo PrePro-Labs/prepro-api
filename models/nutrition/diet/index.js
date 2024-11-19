@@ -41,10 +41,20 @@ const dietFunctions = {
           await pool.query(
             `
               update dietLogs
-              set protein = ?, carbs = ?, fat = ?, calories = ?, cardio = ?, cardioMinutes = ?, notes = ?
+              set protein = ?, carbs = ?, fat = ?, calories = ?, cardio = ?, cardioMinutes = ?, notes = ?, effectiveDate = ?
               where id = ?
               `,
-            [protein, carbs, fat, calories, cardio, cardioMinutes, notes, id]
+            [
+              protein,
+              carbs,
+              fat,
+              calories,
+              cardio,
+              cardioMinutes,
+              notes,
+              effectiveDate,
+              id,
+            ]
           );
         } else {
           // insert
