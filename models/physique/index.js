@@ -24,9 +24,15 @@ const physiqueFunctions = {
         const pool = await poolPromise;
         const [result] = await pool.query(
           `
-          select a.* from checkInsAttachments a
+          select	
+            a.*,
+              c.date,
+              w.weight
+          from checkInsAttachments a
           left join checkIns c
             on a.checkInId = c.id
+          left join weightLogs w
+            on w.date = c.date
           where c.userId = ?
           `,
           [userId]
