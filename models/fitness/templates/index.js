@@ -10,6 +10,7 @@ const templateFunctions = {
           `
                 select * from workoutTemplates
                 where userId = ?
+                and active = 1
                 `,
           [userId]
         );
