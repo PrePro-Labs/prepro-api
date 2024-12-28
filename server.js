@@ -3,6 +3,8 @@ const passport = require("passport");
 const session = require("express-session");
 const path = require("path");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
+
 const RedisStore = require("connect-redis")(session);
 
 dotenv.config({
@@ -24,11 +26,15 @@ app.use(
     }),
     secret: process.env.REDIS_SECRET,
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: "auto", maxAge: 24 * 60 * 60 * 1000 },
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.ENVIRONMENT !== "dev",
+      maxAge: 3 * 24 * 60 * 60 * 1000,
+    }, // removed secure
   })
 );
 
+app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 
@@ -51,11 +57,19 @@ app.use(express.static(path.join(__dirname, "src")));
 
 // Authentication check middleware
 app.use((req, res, next) => {
-  if (!req.user) {
-    res.render("login.html");
-  } else {
-    next();
+  const excludedRoutes = ["/auth/google", "/favicon.ico", "/sw.js"];
+  const isExcluded = excludedRoutes.includes(req.originalUrl);
+
+  if (isExcluded) {
+    return next();
   }
+
+  if (!req.user) {
+    res.cookie("returnTo", req.originalUrl, { httpOnly: true });
+    return res.render("login.html");
+  }
+
+  next();
 });
 
 // Serve static files for the react frontend

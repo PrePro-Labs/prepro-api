@@ -28,19 +28,22 @@ module.exports = function (app, passport) {
     passport.authenticate("google", {
       display: "popup",
       scope: ["profile", "email"],
-      successRedirect: "/success",
-      failureRedirect: "/failure",
-      failureFlash: true,
     })
   );
 
   app.get(
     "/auth/google/callback",
     passport.authenticate("google", {
-      successRedirect: config.routesIndexRedirectURL,
       failureRedirect: "/failure",
       failureFlash: true,
-    })
+    }),
+    (req, res) => {
+      // Retrieve and clear `returnTo` from the cookie
+      const redirectUrl =
+        req.cookies.returnTo || config.routesIndexRedirectURL || "/";
+      res.clearCookie("returnTo"); // Clear the cookie
+      res.redirect(redirectUrl);
+    }
   );
 
   app.get("/logout", function (req, res, next) {
