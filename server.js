@@ -28,7 +28,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.ENVIRONMENT !== "dev",
+      // secure: process.env.ENVIRONMENT !== "dev",
       maxAge: 3 * 24 * 60 * 60 * 1000,
     }, // removed secure
   })
