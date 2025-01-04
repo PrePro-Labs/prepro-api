@@ -57,7 +57,7 @@ app.use(express.static(path.join(__dirname, "src")));
 
 // Authentication check middleware
 app.use((req, res, next) => {
-  const excludedRoutes = ["/auth/google", "/favicon.ico", "/sw.js"];
+  const excludedRoutes = ["/auth/google", "/favicon.ico", "/sw.js", "/"];
   const isExcluded = excludedRoutes.includes(req.originalUrl);
 
   if (isExcluded) {
