@@ -28,7 +28,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      // secure: process.env.ENVIRONMENT !== "dev",
+      // secure: process.env.ENVIRONMENT !== "dev", // having this on prevents cookies in production, neeed for the redirects
       maxAge: 3 * 24 * 60 * 60 * 1000,
     }, // removed secure
   })
@@ -61,17 +61,13 @@ app.use((req, res, next) => {
   const isExcluded = excludedRoutes.includes(req.originalUrl);
 
   if (isExcluded) {
-    console.log("pushing through", req.originalUrl);
     return next();
   }
 
   if (!req.user) {
-    console.log("No user, setting returnTo", req.originalUrl, "going to login");
     res.cookie("returnTo", req.originalUrl, { httpOnly: true });
     return res.render("login.html");
   }
-
-  console.log("continue like normal");
 
   next();
 });
