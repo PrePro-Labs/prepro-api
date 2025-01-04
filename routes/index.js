@@ -41,6 +41,7 @@ module.exports = function (app, passport) {
       // Retrieve and clear `returnTo` from the cookie
       const redirectUrl =
         req.cookies.returnTo || config.routesIndexRedirectURL || "/";
+      console.log("authenticated, redirecting to", redirectUrl);
       res.clearCookie("returnTo"); // Clear the cookie
       res.redirect(redirectUrl);
     }

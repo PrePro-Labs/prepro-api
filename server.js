@@ -66,7 +66,7 @@ app.use((req, res, next) => {
   }
 
   if (!req.user) {
-    console.log("No user, setting returnTo", req.originalUrl, "goint to login");
+    console.log("No user, setting returnTo", req.originalUrl, "going to login");
     res.cookie("returnTo", req.originalUrl, { httpOnly: true });
     return res.render("login.html");
   }
