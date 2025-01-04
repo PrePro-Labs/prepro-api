@@ -57,17 +57,21 @@ app.use(express.static(path.join(__dirname, "src")));
 
 // Authentication check middleware
 app.use((req, res, next) => {
-  const excludedRoutes = ["/auth/google", "/favicon.ico", "/sw.js", "/"];
+  const excludedRoutes = ["/auth/google", "/favicon.ico", "/sw.js"];
   const isExcluded = excludedRoutes.includes(req.originalUrl);
 
   if (isExcluded) {
+    console.log("pushing through", req.originalUrl);
     return next();
   }
 
   if (!req.user) {
+    console.log("No user, setting returnTo", req.originalUrl, "goint to login");
     res.cookie("returnTo", req.originalUrl, { httpOnly: true });
     return res.render("login.html");
   }
+
+  console.log("continue like normal");
 
   next();
 });
