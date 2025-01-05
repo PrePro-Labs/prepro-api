@@ -7,9 +7,11 @@ const supplementFunctions = {
         const pool = await poolPromise;
         const [result] = await pool.query(
           `
-            select 
-	            itm.name,
+            select
+              itm.id,
+              itm.name,
               itm.description,
+              itm.dosage,
               cat.name as categoryName
             from supplementItems itm
             left join supplementItemsCategories cat
