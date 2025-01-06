@@ -12,6 +12,7 @@ const supplementFunctions = {
               itm.name,
               itm.description,
               itm.dosage,
+              itm.priority,
               cat.name as categoryName
             from supplementItems itm
             left join supplementItemsCategories cat
