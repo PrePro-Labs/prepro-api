@@ -35,8 +35,8 @@ const logFunctions = {
         } else {
           await pool.query(
             `
-            insert into supplementLogs (userId, supplementId, date, completed)
-            values (?, ?, ?, 1)
+            insert into supplementLogs (userId, supplementId, date, completed, time)
+            values (?, ?, ?, 1, now())
             `,
             [userId, item.id, date]
           );
@@ -71,8 +71,8 @@ const logFunctions = {
         await pool.query(
           `
             insert into supplementLogs
-            (userId, supplementId, date, completed, reason)
-            values (?, ?, ?, 0, ?)
+            (userId, supplementId, date, completed, reason, time)
+            values (?, ?, ?, 0, ?, now())
             `,
           [userId, item.id, date, reason]
         );
