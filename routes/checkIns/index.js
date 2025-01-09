@@ -50,15 +50,15 @@ router.post(
   uploadToLocal.single("file"),
   async (req, res) => {
     try {
-      const { filename, checkInId } = req.body;
+      const { filename, checkInId, message } = req.body;
       const userId = req.user.id;
 
       await sendEmail(
         "wbeuliss@gmail.com",
-        "jgaynr@icloud.com",
+        "",
         "",
         filename,
-        "",
+        message,
         path.join(__dirname, "../../", req.file.path)
       );
 
