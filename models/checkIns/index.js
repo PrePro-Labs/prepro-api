@@ -65,6 +65,7 @@ const checkInFunctions = {
           comments,
           cardio,
           training,
+          recoveryAnalysis,
         } = values;
         const pool = await poolPromise;
         if (!checkInId) {
@@ -92,7 +93,7 @@ const checkInFunctions = {
           await pool.query(
             `
               update checkIns
-              set hormones = ?, phase = ?, timeline = ?, cheats = ?, comments = ?, cardio = ?, training = ?
+              set hormones = ?, phase = ?, timeline = ?, cheats = ?, comments = ?, cardio = ?, training = ?, recoveryAnalysis = ?
               where id = ?
               `,
             [
@@ -103,6 +104,7 @@ const checkInFunctions = {
               comments,
               cardio,
               training,
+              recoveryAnalysis,
               checkInId,
             ]
           );
