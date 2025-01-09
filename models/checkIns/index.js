@@ -72,8 +72,8 @@ const checkInFunctions = {
           // insert
           await pool.query(
             `
-              insert into checkIns (userId, date, hormones, phase, timeline, cheats, comments, cardio, training)
-              values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+              insert into checkIns (userId, date, hormones, phase, timeline, cheats, comments, training)
+              values (?, ?, ?, ?, ?, ?, ?, ?)
               `,
             [
               userId,
@@ -83,7 +83,6 @@ const checkInFunctions = {
               timeline,
               cheats,
               comments,
-              cardio,
               training,
             ]
           );
@@ -93,16 +92,14 @@ const checkInFunctions = {
           await pool.query(
             `
               update checkIns
-              set hormones = ?, phase = ?, timeline = ?, cheats = ?, comments = ?, cardio = ?, training = ?, recoveryAnalysis = ?
+              set hormones = ?, phase = ?, cheats = ?, comments = ?, training = ?, recoveryAnalysis = ?
               where id = ?
               `,
             [
               hormones,
               phase,
-              timeline,
               cheats,
               comments,
-              cardio,
               training,
               recoveryAnalysis,
               checkInId,
