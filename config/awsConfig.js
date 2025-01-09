@@ -24,6 +24,8 @@ const s3 = new S3Client({
   signatureVersion: "v4",
 });
 
+const lambdaKey = process.env.LAMBDA_API_KEY;
+
 async function getBuckets() {
   return new Promise((resolve, reject) => {
     s3.listBuckets((err, data) => {
@@ -86,4 +88,4 @@ async function deleteFile(bucket, filename) {
   }
 }
 
-module.exports = { upload, getBuckets, getUrl, deleteFile };
+module.exports = { upload, getBuckets, getUrl, deleteFile, lambdaKey };

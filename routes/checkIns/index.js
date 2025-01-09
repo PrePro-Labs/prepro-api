@@ -27,6 +27,11 @@ router.post("/", canView, async (req, res) => {
     const userId = req.user.id;
     const values = req.body;
     const method = await checkInFunctions.editCheckIn(userId, values);
+
+    // if first submit, generate sleep summary
+    // if (method === "insert") {
+    //   await checkInFunctions.generateSleepSummary(userId, values.date);
+    // }
     res.status(200).json({
       message: `${
         method === "insert" ? "inserted" : "updated"
@@ -119,6 +124,20 @@ router.post("/commentary", canView, async (req, res) => {
     await checkInFunctions.addCheckInComment(checkInId, userId, comment);
     res.status(200).json("success");
   } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
+// generate sleep summary
+router.post("/sleep/summary", canView, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { date } = req.body;
+
+    await checkInFunctions.generateSleepSummary(userId, date);
+    res.status(200).json("success");
+  } catch (error) {
+    console.log(error);
     res.status(400).json(error);
   }
 });

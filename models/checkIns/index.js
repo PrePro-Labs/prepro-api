@@ -1,5 +1,6 @@
 const { poolPromise } = require("../../config/database");
-const { getUrl, deleteFile } = require("../../config/awsConfig");
+const { getUrl, deleteFile, lambdaKey } = require("../../config/awsConfig");
+const axios = require("axios");
 
 const checkInFunctions = {
   async getCheckIns(userId) {
@@ -201,6 +202,24 @@ const checkInFunctions = {
           [checkInId, userId, comment]
         );
 
+        resolve("success");
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+
+  async generateSleepSummary(userId, date) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        await axios.post(
+          "https://da4jip6eiyzx5p3jwxtaww7d2e0vcurd.lambda-url.us-east-2.on.aws/",
+          {
+            userId,
+            date,
+            lambdaKey,
+          }
+        );
         resolve("success");
       } catch (e) {
         reject(e);
