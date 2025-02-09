@@ -35,6 +35,32 @@ const sleepFunctions = {
       }
     });
   },
+  async getSleepIntegrations(userId) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        const [result] = await pool.query(
+          `
+          select 
+            usr.id,
+              usr.type,
+              usr.value,
+              typ.name,
+              typ.description
+          from apiUsersIntegrations usr
+          left join apiUsersIntegrationsTypes typ
+            on usr.type = typ.id
+          where usr.userId = ?
+            and usr.type in (1);
+          `,
+          [userId]
+        );
+        resolve(result);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
 };
 
 module.exports = sleepFunctions;
