@@ -14,4 +14,14 @@ router.get("/logs", canView, async (req, res) => {
   }
 });
 
+router.post("/oura/log", canView, async (req, res) => {
+  try {
+    const { userId, date } = req.body;
+    await sleepFunctions.pullOuraSleepLog(userId, date);
+    res.status(200).json({ message: "success" });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
 module.exports = router;
