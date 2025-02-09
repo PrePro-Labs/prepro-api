@@ -61,6 +61,48 @@ const sleepFunctions = {
       }
     });
   },
+  async getSleepSettings(userId) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+        const [result] = await pool.query(
+          `
+          select
+            sleepGoal,
+            checkInFrequency,
+            checkInDay
+          from apiUsers
+          where id = ?
+          `,
+          [userId]
+        );
+        resolve(result[0]);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  async updateSleepSettings(userId, values) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        const pool = await poolPromise;
+
+        for (const key in values) {
+          await pool.query(
+            `
+            update apiUsers
+            set ${key} = ?
+            where id = ?
+            `,
+            [values[key], userId]
+          );
+        }
+        resolve();
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
 };
 
 module.exports = sleepFunctions;
