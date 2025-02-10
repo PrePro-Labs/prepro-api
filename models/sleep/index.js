@@ -1,5 +1,6 @@
 const { poolPromise } = require("../../config/database");
 const { lambdaKey } = require("../../config/awsConfig");
+const axios = require("axios");
 
 const sleepFunctions = {
   async getOuraLogs(userId) {
@@ -21,14 +22,25 @@ const sleepFunctions = {
   async pullOuraSleepLog(userId, date) {
     return new Promise(async function (resolve, reject) {
       try {
-        await axios.post(
-          "https://4apzgqqogvz2v5cduanzxtoyea0rupfx.lambda-url.us-east-2.on.aws/",
-          {
-            userId,
-            date: date,
-            lambdaKey,
-          }
+        const pool = await poolPromise;
+        const [result] = await pool.query(
+          `
+          select * from sleepLogs where userId = ? and date = ?
+          `,
+          [userId, date]
         );
+
+        if (!result.length) {
+          await axios.post(
+            "https://4apzgqqogvz2v5cduanzxtoyea0rupfx.lambda-url.us-east-2.on.aws/",
+            {
+              userId,
+              date: date,
+              lambdaKey,
+            }
+          );
+        }
+
         resolve("success");
       } catch (e) {
         reject(e);
