@@ -34,4 +34,25 @@ router.get("/integrations", canView, async (req, res) => {
   }
 });
 
+router.get("/settings", canView, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const result = await sleepFunctions.getSleepSettings(userId);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json(error);
+  }
+});
+
+router.post("/settings", canView, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    await sleepFunctions.updateSleepSettings(userId, req.body);
+    res.status(200).json({ message: "success" });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
 module.exports = router;
