@@ -28,9 +28,9 @@ router.post("/", canView, async (req, res) => {
     const values = req.body;
     const method = await checkInFunctions.editCheckIn(userId, values);
 
-    // if first submit, generate sleep summary
+    // if first submit, generate AI summary
     if (method === "insert") {
-      await checkInFunctions.generateSleepSummary(userId, values.date);
+      await checkInFunctions.generateAISummary(userId, values.date);
     }
 
     res.status(200).json({
@@ -129,13 +129,13 @@ router.post("/commentary", canView, async (req, res) => {
   }
 });
 
-// generate sleep summary
-router.post("/sleep/summary", canView, async (req, res) => {
+// generate ai summary
+router.post("/ai/summary", canView, async (req, res) => {
   try {
     const userId = req.user.id;
     const { date } = req.body;
 
-    await checkInFunctions.generateSleepSummary(userId, date);
+    await checkInFunctions.generateAISummary(userId, date);
     res.status(200).json("success");
   } catch (error) {
     res.status(400).json(error);
