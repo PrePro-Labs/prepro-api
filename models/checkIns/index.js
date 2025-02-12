@@ -63,9 +63,9 @@ const checkInFunctions = {
           timeline,
           cheats,
           comments,
-          cardio,
           training,
           recoveryAnalysis,
+          trainingAnalysis,
         } = values;
         const pool = await poolPromise;
         if (!checkInId) {
@@ -92,7 +92,7 @@ const checkInFunctions = {
           await pool.query(
             `
               update checkIns
-              set hormones = ?, phase = ?, cheats = ?, comments = ?, training = ?, recoveryAnalysis = ?
+              set hormones = ?, phase = ?, cheats = ?, comments = ?, training = ?, recoveryAnalysis = ?, trainingAnalysis = ?
               where id = ?
               `,
             [
@@ -102,6 +102,7 @@ const checkInFunctions = {
               comments,
               training,
               recoveryAnalysis,
+              trainingAnalysis,
               checkInId,
             ]
           );
@@ -208,7 +209,7 @@ const checkInFunctions = {
     });
   },
 
-  async generateSleepSummary(userId, date) {
+  async generateAISummary(userId, date) {
     return new Promise(async function (resolve, reject) {
       try {
         await axios.post(
