@@ -4,17 +4,13 @@ const dashboardFunctions = require("../../models/dashboard");
 
 // no canView middleware since these are accessed regardless of apps
 router.get("/apps", async (req, res) => {
-  const userId = req.user.id;
-  const pool = await poolPromise;
-  const [result] = await pool.query(`
-      select app.* from apps app
-      left join apiUserAccess acc
-          on app.id = acc.appId
-      where acc.userId = ${userId}
-      or app.allUsers = 1
-      `);
-
-  res.status(200).json(result);
+  try {
+    const userId = req.user.id;
+    const result = await dashboardFunctions.getApps(userId);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(400).json(error);
+  }
 });
 
 router.get("/changelog", async (req, res) => {
